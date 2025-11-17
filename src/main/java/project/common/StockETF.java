@@ -1,14 +1,21 @@
 package project.common;
 
-public class StockETF {
-    private Date date;
-    private double open;
-    private double high;
-    private double low;
-    private double close;
-    private double volume;
+import java.text.DecimalFormat;
+import java.util.List;
 
-    public StockETF(Date date, double open, double high, double low, double close, double volume) {
+public class StockETF {
+    private String name;
+    private Security securityType;
+    private List<MyDate> date;
+    private List<Double> close;
+    private List<Double> volume;
+    private List<Double> open;
+    private List<Double> high;
+    private List<Double> low;
+
+    public StockETF(String name, Security securityType, List<MyDate> date, List<Double> close, List<Double> volume, List<Double> open, List<Double> high, List<Double> low) {
+        this.name = name;
+        this.securityType = securityType;
         this.date = date;
         this.open = open;
         this.high = high;
@@ -17,27 +24,43 @@ public class StockETF {
         this.volume = volume;
     }
 
-    public Date getDate() {
+    public String getName() {
+        return name;
+    }
+
+    public Security getSecurityType() {
+        return securityType;
+    }
+
+    public List<MyDate> getDate() {
         return this.date;
     }
 
-    public double getOpen() {
-        return this.open;
-    }
-
-    public double getHigh() {
-        return this.high;
-    }
-
-    public double getLow() {
-        return this.low;
-    }
-
-    public double getClose() {
+    public List<Double> getClose() {
         return this.close;
     }
 
-    public double getVolume() {
+    public List<Double> getVolume() {
         return this.volume;
+    }
+
+    public List<Double> getOpen() {
+        return this.open;
+    }
+
+    public List<Double> getHigh() {
+        return this.high;
+    }
+
+    public List<Double> getLow() {
+        return this.low;
+    }
+
+    public void returnStockETF() {
+        System.out.println("Name: " + this.name + "\nType: " + this.securityType);
+        DecimalFormat df = new DecimalFormat("0.##########");
+        for (int i = 0; i < this.date.size(); i++) {
+            System.out.println("Date: " + this.date.get(i).toString() + " Close: $" + this.close.get(i) + " Volume: " + df.format(this.volume.get(i)) + " Open: $" + this.open.get(i) + " High: $" + this.high.get(i) + " Low: $" + this.low.get(i));
+        }
     }
 }
