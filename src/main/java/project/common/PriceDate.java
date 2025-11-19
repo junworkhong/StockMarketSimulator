@@ -1,18 +1,20 @@
 package project.common;
 
+import java.text.DecimalFormat;
+
 public class PriceDate {
-    private MyDate date;
-    private double close;
-    private long volume;
-    private double open;
-    private double high;
-    private double low;
+    private final MyDate date;
+    private final double close;
+    private final long volume;
+    private final double open;
+    private final double high;
+    private final double low;
 
 
     public PriceDate(MyDate date, double close, long volume, double open, double high, double low) {
+        this.date = date;
         this.close = close;
         this.volume = volume;
-        this.date = date;
         this.open = open;
         this.high = high;
         this.low = low;
@@ -44,6 +46,7 @@ public class PriceDate {
 
     @Override
     public String toString() {
-        return "\nDate: " + this.date.toString() + " Close: $" + this.close + " Volume: " + this.volume + " Open: $" + this.open + " High: $" + this.high + " Low: $" + this.low;
+        DecimalFormat df = new DecimalFormat("#.##");
+        return "\nDate: " + this.date.toString() + " Close: $" + df.format(this.close) + " Volume: " + this.volume + " Open: $" + df.format(this.open) + " High: $" + df.format(this.high) + " Low: $" + df.format(this.low);
     }
 }

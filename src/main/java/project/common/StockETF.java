@@ -4,23 +4,23 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockETF {
-    private final String tickerName;
+public class StockETF extends Investment{
     private final Security securityType;
     private final List<PriceDate> prices;
 
     public StockETF(String tickerName, Security securityType) {
-        this.tickerName = tickerName;
+        super(tickerName);
         this.securityType = securityType;
         this.prices = new ArrayList<>();
     }
 
+    @Override
     public void addPriceDate (PriceDate priceDate){
         this.prices.add(priceDate);
     }
 
     public String getTickerName() {
-        return this.tickerName;
+        return this.name;
     }
 
     public Security getSecurityType() {
@@ -34,6 +34,6 @@ public class StockETF {
     @Override
     public String toString() {
 //        DecimalFormat df = new DecimalFormat("0.##########");
-        return "Ticker Name: " + this.tickerName + "\nType: " + this.securityType +  "\nPrices: " + this.prices;
+        return "Ticker Name: " + this.name + "\nType: " + this.securityType +  "\nPrices: " + this.prices;
     }
 }
