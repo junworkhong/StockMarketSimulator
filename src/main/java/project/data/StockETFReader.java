@@ -14,7 +14,7 @@ import java.util.Map;
 //TODO
 //DONE: Make loop so all .csvs can be read and create objects
 //DONE: HashMap for storing date and price
-//Maybe classes for S&P 500 index and Federal Reserve? Maybe not
+//DONE: Maybe classes for S&P 500 index and Federal Reserve? Maybe not
 //Portfolio Class
 
 public class StockETFReader {
