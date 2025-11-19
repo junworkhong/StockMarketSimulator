@@ -7,12 +7,16 @@ import project.common.MyDate;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FedReserveReader {
     public static void main(String[] args) {
         String filepath = "C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\";
+        Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
+        filepath = path.toString();
         String filename = "Federal Reserve TBSM3.csv";
-        File directory = new File(filepath + filename);
+        File directory = new File(filepath + "\\" + filename);
 //        File[] filesAndDirs = directory.listFiles();
 
         FedReserve fedReserve = new FedReserve();
@@ -30,9 +34,9 @@ public class FedReserveReader {
                     FedDate fedDate = new FedDate(date,Double.parseDouble(split[1]));
                     fedReserve.addFedDate(fedDate);
 
-                    if (i == 50)
-                        break;
-                    i++;
+//                    if (i == 100)
+//                        break;
+//                    i++;
                 }
                 buffer.close();
                 filer.close();

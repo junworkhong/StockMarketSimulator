@@ -8,6 +8,8 @@ import project.common.StockETF;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,11 @@ public class StockETFReader {
 //        String filename = "C:\\Users\\jhong\\Documents\\Documents\\Second Degree\\Columbia\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\AAPL Stock (Apple).csv";
         String filename = "C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\AAPL Stock (Apple).csv";
         File directory = new File("C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs");
+
+        Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
+        System.out.println(path);
+//        Paths.get("StockMarketSimulator", "CSVs");
+        directory = new File(path.toString());
         File[] filesAndDirs = directory.listFiles();
         Map<String, StockETF> database = new HashMap<>();
 
@@ -72,7 +79,7 @@ public class StockETFReader {
                                     Double.parseDouble(split[5])
                             );
                             myStockETF.addPriceDate(priceDate);
-                            if (i == 5)
+                            if (i == 100)
                                 break;
                             i++;
                         }

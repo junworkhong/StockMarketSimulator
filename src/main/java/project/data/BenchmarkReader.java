@@ -8,15 +8,19 @@ import project.common.StockETF;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BenchmarkReader {
     public static void main(String[] args) {
 //        File directory = new File("C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs");
-        String filepath = "C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs";
+        String filepath = "C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\";
+        Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
+        filepath = path.toString();
         String filename = "sap500indexbenchmark.csv";
-        File directory = new File(filepath + filename);
+        File directory = new File(filepath + "\\" + filename);
 //        File[] filesAndDirs = directory.listFiles();
         String name = "S&P 500 Index Benchmark";
 
@@ -47,7 +51,7 @@ public class BenchmarkReader {
                             Double.parseDouble(split[3])
                     );
                     benchmark.addPriceDate(priceDate);
-                    if (i == 50)
+                    if (i == 100)
                         break;
                     i++;
                 }
