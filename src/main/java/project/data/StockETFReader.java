@@ -20,6 +20,89 @@ import java.util.Map;
 //Portfolio Class
 
 public class StockETFReader {
+    private static StockETFReader instance;
+    private StockETFReader(){}
+
+    public Map<String, StockETF> readStockETFs() {
+        Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
+        File directory = new File(path.toString());
+        File[] filesAndDirs = directory.listFiles();
+        Map<String, StockETF> database = new HashMap<>();
+
+        try {
+            if (filesAndDirs != null) {
+                for (File file : filesAndDirs) {
+                    if (file.getName().endsWith(".csv") && (file.getName().toLowerCase().contains("stock") || file.getName().toLowerCase().contains("etf"))) {
+                        FileReader filer = new FileReader(file);
+                        BufferedReader buffer = new BufferedReader(filer);
+
+                        String line = buffer.readLine();
+                        String name = file.getName().substring(0, file.getName().indexOf(" "));
+//                        System.out.println(name);
+
+                        String securityType = file.getName().substring(name.length() + 1, file.getName().indexOf(" ", name.length() + 1));
+//                        System.out.println(securityType);
+                        Security myType = null;
+
+                        if (securityType.toLowerCase().equals("stock")) {
+                            myType = Security.Stock;
+//                            System.out.println(myType.toString());
+                        }else if (securityType.toLowerCase().equals("etf")) {
+                            myType = Security.ETF;
+//                            System.out.println(myType.toString());
+                        }
+
+                        StockETF myStockETF = new StockETF(name, myType);
+                        int i = 0;
+                        while ((line = buffer.readLine()) != null) {
+                            String[] split = line.split(",");
+
+                            MyDate date = new MyDate(split[0]);
+                            String regex = "[$\\s]";
+
+                            for (int a = 1; a < split.length; a++) {
+                                split[a] = split[a].replaceAll(regex, "");
+                            }
+
+                            String regex2 = "[.0\\s]";
+                            split[2] = split[2].replaceAll(regex2, "");
+
+                            PriceDate priceDate = new PriceDate(
+                                    date,
+                                    Double.parseDouble(split[1]),
+                                    Long.parseLong(split[2]),
+                                    Double.parseDouble(split[3]),
+                                    Double.parseDouble(split[4]),
+                                    Double.parseDouble(split[5])
+                            );
+                            myStockETF.addPriceDate(priceDate);
+//                            if (i == 100)
+//                                break;
+//                            i++;
+                        }
+//                        System.out.println(myStockETF);
+                        database.put(name, myStockETF);
+//                        System.out.println(name);
+//                        System.out.println(database.get(name) + "\n");
+//                        System.out.println(database.get("AAPL"));
+                    }
+//                    System.exit(1);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return database;
+    }
+
+    public static StockETFReader getInstance() {
+        if (instance == null) {
+            instance = new StockETFReader();
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
 //        String filename = "C:\\Users\\jhong\\Documents\\Documents\\Second Degree\\Columbia\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\AAPL Stock (Apple).csv";
         String filename = "C:\\Users\\junyo\\OneDrive\\Documents\\School\\Third Year\\Fall 2025\\Clean OOD\\Project\\StockMarketSimulator\\CSVs\\AAPL Stock (Apple).csv";
@@ -79,14 +162,15 @@ public class StockETFReader {
                                     Double.parseDouble(split[5])
                             );
                             myStockETF.addPriceDate(priceDate);
-                            if (i == 100)
-                                break;
-                            i++;
+//                            if (i == 100)
+//                                break;
+//                            i++;
                         }
 //                        System.out.println(myStockETF);
                         database.put(name, myStockETF);
 //                        System.out.println(name);
-                        System.out.println(database.get(name) + "\n");
+//                        System.out.println(database.get(name) + "\n");
+//                        System.out.println(database.get("AAPL"));
                     }
 //                    System.exit(1);
                 }
