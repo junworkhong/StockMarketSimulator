@@ -68,14 +68,15 @@ public class StockETFReader {
                             split[2] = split[2].replaceAll(regex2, "");
 
                             PriceDate priceDate = new PriceDate(
-                                    date,
+//                                    date,
                                     Double.parseDouble(split[1]),
                                     Long.parseLong(split[2]),
                                     Double.parseDouble(split[3]),
                                     Double.parseDouble(split[4]),
                                     Double.parseDouble(split[5])
                             );
-                            myStockETF.addPriceDate(priceDate);
+//                            myStockETF.addPriceDate(priceDate);
+                            myStockETF.addPriceMap(date, priceDate);
 //                            if (i == 100)
 //                                break;
 //                            i++;
@@ -154,22 +155,23 @@ public class StockETFReader {
                             split[2] = split[2].replaceAll(regex2, "");
 
                             PriceDate priceDate = new PriceDate(
-                                    date,
+//                                    date,
                                     Double.parseDouble(split[1]),
                                     Long.parseLong(split[2]),
                                     Double.parseDouble(split[3]),
                                     Double.parseDouble(split[4]),
                                     Double.parseDouble(split[5])
                             );
-                            myStockETF.addPriceDate(priceDate);
-//                            if (i == 100)
-//                                break;
-//                            i++;
+//                            myStockETF.addPriceDate(priceDate);
+                            myStockETF.addPriceMap(date, priceDate);
+                            if (i == 20)
+                                break;
+                            i++;
                         }
 //                        System.out.println(myStockETF);
                         database.put(name, myStockETF);
 //                        System.out.println(name);
-//                        System.out.println(database.get(name) + "\n");
+                        System.out.println(database.get(name) + "\n");
 //                        System.out.println(database.get("AAPL"));
                     }
 //                    System.exit(1);

@@ -6,13 +6,14 @@ import java.util.Set;
 
 public class Portfolio {
     private static double Budget = 10000.00;
-    private final int InitialInvestment;
+    private final double InitialInvestment;
     private final Map<String, Integer> Allocations;
-    private final int StopLoss;
-    private final int Risk;
-    private int Target;
-    private final Map<String, Integer> Threshold;
-    private final Set<StockETF> StockETFSet;
+    private final int StopLossPercentage;
+    private final int RiskPercentage;
+    private final int TargetPercentage;
+    private final Map<String, Integer> ThresholdPrice;
+    private final Map<String, StockETF> UserStockETFMap;
+    private Map<String, Double> shares;
 
 //    Operation 1 variables
     private double portfolioValue;
@@ -35,17 +36,26 @@ public class Portfolio {
     private String biggestLoser;
     private double strategyReturn;
 
-    public Portfolio(int initialInvestment, Map<String, Integer> Allocations, int StopLoss, int Risk, int Target, Map<String, Integer> Threshold, Set<StockETF> StockETFSet) {
+    public Portfolio(double initialInvestment, Map<String, Integer> Allocations, int StopLoss, int Risk, int Target, Map<String, Integer> Threshold, Map<String, StockETF> UserStockETFMap, Map <String, Double> shares) {
         this.InitialInvestment = initialInvestment;
         this.Allocations = Allocations;
-        this.StopLoss = StopLoss;
-        this.Risk = Risk;
-        this.Target = Target;
-        this.Threshold = Threshold;
-        this.StockETFSet = StockETFSet;
+        this.StopLossPercentage = StopLoss;
+        this.RiskPercentage = Risk;
+        this.TargetPercentage = Target;
+        this.ThresholdPrice = Threshold;
+        this.UserStockETFMap = UserStockETFMap;
+        this.shares = shares;
     }
 
-    public int getInitialInvestment() {
+    public static double getBudget() {
+        return Budget;
+    }
+
+    public static void addBudget(double money) {
+        Budget = Budget + money;
+    }
+
+    public double getInitialInvestment() {
         return this.InitialInvestment;
     }
 
@@ -54,23 +64,31 @@ public class Portfolio {
     }
 
     public int getStopLoss() {
-        return this.StopLoss;
+        return this.StopLossPercentage;
     }
 
     public int getRisk() {
-        return this.Risk;
+        return this.RiskPercentage;
     }
 
     public int getTarget() {
-        return this.Target;
+        return this.TargetPercentage;
     }
 
     public Map<String, Integer> getThreshold() {
-        return this.Threshold;
+        return this.ThresholdPrice;
     }
 
-    public Set<StockETF> getStockETFSet() {
-        return this.StockETFSet;
+    public Map<String, StockETF> getUserStockETFMap() {
+        return this.UserStockETFMap;
+    }
+
+    public Map<String, Double> getShares() {
+        return this.shares;
+    }
+
+    public void addShares(String ticker, Double shares) {
+        this.shares.put(ticker, this.shares.get(ticker) + shares);
     }
 
     public double getStrategyReturn() {

@@ -9,24 +9,60 @@ User inputs their own pattern: stop loss, risk, target, buy threshold price
 If they run out of money, only holds and sells. Simulation continues until last day
  */
 
-import project.common.Portfolio;
-import project.common.StockETF;
+import project.common.*;
 import project.data.StockETFReader;
 
 import java.util.*;
 
 public class TradingPatterns {
-    private final StockETFReader reader = StockETFReader.getInstance();
-    private final Map<String, StockETF> stockETFs = reader.readStockETFs();
-    private final Portfolio dummy = initializeDummyPortfolio();
+    private static final StockETFReader reader = StockETFReader.getInstance();
+    private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
+    private static final Portfolio dummy = initializeDummyPortfolio();
+    private static final DateCounter dates = new DateCounter();
 
-    public void UserTradingPattern(){
-        for(StockETF stockETF : dummy.getStockETFSet()){
-            int initial = dummy.getInitialInvestment();
+    /*
+     Map<String, Double> shares = new HashMap<>()
+                put("AAPL", (double)(20*initial));
+                put("AMZN", (double)15*initial);
+                put("GOOGL", (double)5*initial);
+                put("TSLA", (double)10*initial);
+                put("NVDA", (double)15*initial);
+                put("KO", (double)10*initial);
+                put("SPYD", (double)15*initial);
+                put("VOO", (double)10*initial);
+                put("SPYD", (double)10*initial);
+     */
+
+    public static void UserTradingPattern(){
+//        double budget = dummy.getBudget();
+        double initial = dummy.getInitialInvestment(); //6000
+        double stoploss = dummy.getStopLoss() * 0.01;
+        double risk = dummy.getRisk() * 0.01;
+        double target = dummy.getTarget() * 0.01;
+        dummy.addBudget((-1)*initial); // = 4000
+        risk = risk * dummy.getBudget();
+        System.out.println(dummy.getBudget());
+
+        Map<String, StockETF> UserStocks = dummy.getUserStockETFMap();
+
+        for (MyDate date : dates.getDateList()) {
+            for (Map.Entry<String, StockETF> entry : UserStocks.entrySet()) {
+                int i = 0;
+                double shareCounter = dummy.getShares().get(entry.getKey());
+                double open = entry.getValue().getPriceMap().get(date).getOpen();
+                double thresholdPrice = dummy.getThreshold().get(entry.getKey());
+                String tickerName = entry.getKey();
+
+                if (shareCounter == 0) {
+                    if (open > thresholdPrice && (dummy.getBudget() > risk))
+                        dummy.addShares(tickerName, risk * open);
+                }
+            }
+
         }
     }
 
-    private Portfolio initializeDummyPortfolio() {
+    private static Portfolio initializeDummyPortfolio() {
         int initial = 6000;
         Map<String, Integer> allocation = new HashMap<>() {
             {
@@ -38,7 +74,7 @@ public class TradingPatterns {
                 put("KO", 10);
                 put("SPYD", 15);
                 put("VOO", 10);
-                put("SPYD", 10);
+                put("VTI", 10);
             }
         };
         int StopLoss = 80;
@@ -58,17 +94,32 @@ public class TradingPatterns {
             }
         };
 
-        Set<StockETF> StockETFSet = new HashSet<>() {
+        Map<String, StockETF> UserStockETFMap = new HashMap<>() {
             {
-                add(stockETFs.get("AAPL"));
-                add(stockETFs.get("AMZN"));
-                add(stockETFs.get("GOOGL"));
-                add(stockETFs.get("TSLA"));
-                add(stockETFs.get("NVDA"));
-                add(stockETFs.get("KO"));
-                add(stockETFs.get("SPYD"));
-                add(stockETFs.get("VOO"));
-                add(stockETFs.get("VTI"));
+                put("AAPL", stockETFs.get("AAPL"));
+                put("AMZN", stockETFs.get("AMZN"));
+                put("GOOGL", stockETFs.get("GOOGL"));
+                put("TSLA", stockETFs.get("TSLA"));
+                put("NVDA", stockETFs.get("NVDA"));
+                put("KO", stockETFs.get("KO"));
+                put("SPYD", stockETFs.get("SPYD"));
+                put("VOO", stockETFs.get("VOO"));
+                put("VTI", stockETFs.get("VTI"));
+            }
+        };
+
+        Map<String, Double> shares = new HashMap<>() {
+            {
+                put("AAPL", 0.20*initial);
+                put("AMZN", 0.15*initial);
+                put("GOOGL", 0.05*initial);
+                put("TSLA", 0.10*initial);
+                put("NVDA", 0.15*initial);
+                put("KO", 0.10*initial);
+                put("SPYD", 0.15*initial);
+                put("VOO", 0.10*initial);
+                put("VTI", 0.10*initial);
+
             }
         };
 
@@ -79,13 +130,14 @@ public class TradingPatterns {
                 Risk,
                 Target,
                 threshold,
-                StockETFSet
+                UserStockETFMap,
+                shares
         );
 
         return dummyPortfolio;
     }
 
     public static void main(String[] args) {
-
+        UserTradingPattern();
     }
 }

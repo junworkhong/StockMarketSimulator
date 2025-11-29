@@ -3,7 +3,7 @@ package project.common;
 import java.text.DecimalFormat;
 
 public class PriceDate {
-    private final MyDate date;
+//    private final MyDate date;
     private final double close;
     private final long volume;
     private final double open;
@@ -11,8 +11,10 @@ public class PriceDate {
     private final double low;
 
 
-    public PriceDate(MyDate date, double close, long volume, double open, double high, double low) {
-        this.date = date;
+    public PriceDate(
+//            MyDate date
+                     double close, long volume, double open, double high, double low) {
+//        this.date = date;
         this.close = close;
         this.volume = volume;
         this.open = open;
@@ -20,9 +22,9 @@ public class PriceDate {
         this.low = low;
     }
 
-    public MyDate getDate() {
-        return this.date;
-    }
+//    public MyDate getDate() {
+//        return this.date;
+//    }
 
     public double getClose() {
         return this.close;
@@ -47,6 +49,8 @@ public class PriceDate {
     @Override
     public String toString() {
         DecimalFormat df = new DecimalFormat("#.##");
-        return "\nDate: " + this.date.toString() + " Close: $" + df.format(this.close) + " Volume: " + this.volume + " Open: $" + df.format(this.open) + " High: $" + df.format(this.high) + " Low: $" + df.format(this.low);
+        return
+//                "\nDate: " + this.date.toString() +
+                " Close: $" + df.format(this.close) + " Volume: " + this.volume + " Open: $" + df.format(this.open) + " High: $" + df.format(this.high) + " Low: $" + df.format(this.low);
     }
 }

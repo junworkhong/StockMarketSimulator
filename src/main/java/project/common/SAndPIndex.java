@@ -1,19 +1,31 @@
 package project.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SAndPIndex extends Investment{
     private final List<PriceDate> prices;
+    private final Map<MyDate, PriceDate> priceMap;
 
     public SAndPIndex(String name) {
         super(name);
         this.prices = new ArrayList<>();
+        this.priceMap = new HashMap<>();
     }
 
     @Override
     public void addPriceDate(PriceDate priceDate) {
         this.prices.add(priceDate);
+    }
+
+    public void addPriceMap(MyDate date, PriceDate priceDate){
+        this.priceMap.put(date, priceDate);
+    }
+
+    public Map<MyDate, PriceDate> getPriceMap() {
+        return this.priceMap;
     }
 
     public List<PriceDate> getPrices() {

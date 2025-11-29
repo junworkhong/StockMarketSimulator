@@ -43,14 +43,15 @@ public class BenchmarkReader {
                     split[5] =  split[5].replaceAll(regex, "");
 
                     PriceDate priceDate = new PriceDate(
-                            date,
+//                            date,
                             Double.parseDouble(split[4]),
                             Long.parseLong(split[5]),
                             Double.parseDouble(split[1]),
                             Double.parseDouble(split[2]),
                             Double.parseDouble(split[3])
                     );
-                    benchmark.addPriceDate(priceDate);
+//                    benchmark.addPriceDate(priceDate);
+                    benchmark.addPriceMap(date, priceDate);
                     if (i == 100)
                         break;
                     i++;
