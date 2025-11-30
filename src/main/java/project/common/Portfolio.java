@@ -1,11 +1,12 @@
 package project.common;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Portfolio {
-    private static double Budget = 10000.00;
+    private double Budget = 10000.00;
     private final double InitialInvestment;
     private final Map<String, Integer> Allocations;
     private final int StopLossPercentage;
@@ -14,6 +15,7 @@ public class Portfolio {
     private final Map<String, Integer> ThresholdPrice;
     private final Map<String, StockETF> UserStockETFMap;
     private Map<String, Double> shares;
+    private Map<String, Double> buyPrice = new HashMap<>();
 
 //    Operation 1 variables
     private double portfolioValue;
@@ -47,12 +49,12 @@ public class Portfolio {
         this.shares = shares;
     }
 
-    public static double getBudget() {
-        return Budget;
+    public double getBudget() {
+        return this.Budget;
     }
 
-    public static void addBudget(double money) {
-        Budget = Budget + money;
+    public void addBudget(double money) {
+        this.Budget = this.Budget + money;
     }
 
     public double getInitialInvestment() {
@@ -89,6 +91,18 @@ public class Portfolio {
 
     public void addShares(String ticker, Double shares) {
         this.shares.put(ticker, this.shares.get(ticker) + shares);
+    }
+
+    public void sellShares(String ticker) {
+        this.shares.put(ticker, 0.0);
+    }
+
+    public Map<String, Double> getBuyPrice() {
+        return buyPrice;
+    }
+
+    public void addBuyPrice(String ticker, double newPrice) {
+        buyPrice.put(ticker, newPrice);
     }
 
     public double getStrategyReturn() {
