@@ -16,6 +16,7 @@ public class Portfolio {
     private final Map<String, StockETF> UserStockETFMap;
     private Map<String, Double> shares;
     private Map<String, Double> buyPrice = new HashMap<>();
+    private DateResultMap dateResultMap;
 
 //    Operation 1 variables
     private double portfolioValue;
@@ -38,7 +39,15 @@ public class Portfolio {
     private String biggestLoser;
     private double strategyReturn;
 
-    public Portfolio(double initialInvestment, Map<String, Integer> Allocations, int StopLoss, int Risk, int Target, Map<String, Integer> Threshold, Map<String, StockETF> UserStockETFMap, Map <String, Double> shares) {
+    public Portfolio(double initialInvestment,
+                     Map<String, Integer> Allocations,
+                     int StopLoss,
+                     int Risk,
+                     int Target,
+                     Map<String, Integer> Threshold,
+                     Map<String, StockETF> UserStockETFMap,
+                     Map <String, Double> shares,
+                     DateResultMap dateMap) {
         this.InitialInvestment = initialInvestment;
         this.Allocations = Allocations;
         this.StopLossPercentage = StopLoss;
@@ -47,7 +56,10 @@ public class Portfolio {
         this.ThresholdPrice = Threshold;
         this.UserStockETFMap = UserStockETFMap;
         this.shares = shares;
+        this.dateResultMap = dateMap;
     }
+
+//    Getters and setters for calculations
 
     public double getBudget() {
         return this.Budget;
@@ -104,6 +116,12 @@ public class Portfolio {
     public void addBuyPrice(String ticker, double newPrice) {
         buyPrice.put(ticker, newPrice);
     }
+
+    public DateResultMap getDateResultMap() {
+        return this.dateResultMap;
+    }
+
+//    Getters and setters for results
 
     public double getStrategyReturn() {
         return strategyReturn;

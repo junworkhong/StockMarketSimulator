@@ -14,8 +14,8 @@ import project.data.StockETFReader;
 
 import java.util.*;
 
-public class TradingPatterns {
-    private static final boolean DEBUG = true;
+public class ExampleTradingPattern {
+//    private static final boolean DEBUG = true;
 
     private static final StockETFReader reader = StockETFReader.getInstance();
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
@@ -185,7 +185,7 @@ public class TradingPatterns {
     }
 
     public static Portfolio initializeDummyPortfolio() {
-        int initial = 6000;
+        double initial = 6000.0;
         Map<String, Integer> allocation = new HashMap<>() {
             {
                 put("AAPL", 20);
@@ -245,6 +245,8 @@ public class TradingPatterns {
             }
         };
 
+        DateResultMap dateResultMap = new DateResultMap();
+
         Portfolio dummyPortfolio = new Portfolio(
                 initial,
                 allocation,
@@ -253,7 +255,8 @@ public class TradingPatterns {
                 Target,
                 threshold,
                 UserStockETFMap,
-                shares
+                shares,
+                dateResultMap
         );
 
         return dummyPortfolio;
