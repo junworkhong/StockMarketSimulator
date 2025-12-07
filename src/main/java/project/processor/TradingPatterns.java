@@ -20,7 +20,7 @@ public class TradingPatterns {
     private static final StockETFReader reader = StockETFReader.getInstance();
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
     private static final Portfolio dummy = initializeDummyPortfolio();
-    private static final DateCounter dates = new DateCounter();
+    static final DateCounter dates = new DateCounter();
 
     /*
      Map<String, Double> shares = new HashMap<>()
