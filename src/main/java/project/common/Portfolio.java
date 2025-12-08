@@ -1,9 +1,6 @@
 package project.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Portfolio {
     private double Budget = 10000.00;
@@ -12,10 +9,14 @@ public class Portfolio {
     private final int StopLossPercentage;
     private final int RiskPercentage;
     private final int TargetPercentage;
-    private final Map<String, Integer> ThresholdPrice;
+    private final Map<String, Double> ThresholdPrice;
     private final Map<String, StockETF> UserStockETFMap;
     private Map<String, Double> shares;
+    private Map<String, Double> initialShares = new HashMap<>();
     private Map<String, Double> buyPrice = new HashMap<>();
+    private Map<String, Double> endPrice = new HashMap<>();
+    private DateResultMap dateResultMap;
+    private final Set<String> stockList = new TreeSet<>();
 
 //    Operation 1 variables
     private double portfolioValue;
@@ -38,7 +39,15 @@ public class Portfolio {
     private String biggestLoser;
     private double strategyReturn;
 
-    public Portfolio(double initialInvestment, Map<String, Integer> Allocations, int StopLoss, int Risk, int Target, Map<String, Integer> Threshold, Map<String, StockETF> UserStockETFMap, Map <String, Double> shares) {
+    public Portfolio(double initialInvestment,
+                     Map<String, Integer> Allocations,
+                     int StopLoss,
+                     int Risk,
+                     int Target,
+                     Map<String, Double> Threshold,
+                     Map<String, StockETF> UserStockETFMap,
+                     Map <String, Double> shares,
+                     DateResultMap dateMap) {
         this.InitialInvestment = initialInvestment;
         this.Allocations = Allocations;
         this.StopLossPercentage = StopLoss;
@@ -47,7 +56,14 @@ public class Portfolio {
         this.ThresholdPrice = Threshold;
         this.UserStockETFMap = UserStockETFMap;
         this.shares = shares;
+        this.dateResultMap = dateMap;
+
+        for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
+            stockList.add(entry.getKey());
+        }
     }
+
+//    Getters and setters for calculations
 
     public double getBudget() {
         return this.Budget;
@@ -77,7 +93,7 @@ public class Portfolio {
         return this.TargetPercentage;
     }
 
-    public Map<String, Integer> getThreshold() {
+    public Map<String, Double> getThreshold() {
         return this.ThresholdPrice;
     }
 
@@ -93,8 +109,18 @@ public class Portfolio {
         this.shares.put(ticker, this.shares.get(ticker) + shares);
     }
 
+    public void initializeShares(String ticker, Double shares) {
+        this.initialShares.put(ticker, shares);
+    }
+
     public void sellShares(String ticker) {
         this.shares.put(ticker, 0.0);
+    }
+
+    public void resetShares(String... tickers) {
+        for (String t : tickers) {
+            this.shares.put(t, 0.0);
+        }
     }
 
     public Map<String, Double> getBuyPrice() {
@@ -104,6 +130,28 @@ public class Portfolio {
     public void addBuyPrice(String ticker, double newPrice) {
         buyPrice.put(ticker, newPrice);
     }
+
+    public Map<String, Double> getEndPrice() {
+        return endPrice;
+    }
+
+    public void addEndPrice(String ticker, double endPrice) {
+        this.endPrice.put(ticker, endPrice);
+    }
+
+    public DateResultMap getDateResultMap() {
+        return this.dateResultMap;
+    }
+
+    public Set<String> getStockList() {
+        return this.stockList;
+    }
+
+    public Map<String, Double> getInitialShares() {
+        return this.initialShares;
+    }
+
+//    Getters and setters for results
 
     public double getStrategyReturn() {
         return strategyReturn;

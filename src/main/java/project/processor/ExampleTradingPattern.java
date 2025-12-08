@@ -14,8 +14,11 @@ import project.data.StockETFReader;
 
 import java.util.*;
 
-public class TradingPatterns {
-    private static final boolean DEBUG = true;
+import static project.processor.SortBestWorstPerformers.sortBestToWorst;
+import static project.processor.TotalValueOnDate.calculateTotalValueOnDate;
+
+public class ExampleTradingPattern {
+//    private static final boolean DEBUG = true;
 
     private static final StockETFReader reader = StockETFReader.getInstance();
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
@@ -84,7 +87,6 @@ public class TradingPatterns {
 
         double targetMultiplier = dummy.getTarget() * 0.01;
         double stoplossMultiplier = dummy.getStopLoss() * 0.01;
-
 //        int i = 0;
         for (MyDate date : dates.getDateList()) {
 //            if (i == 30)
@@ -158,6 +160,18 @@ public class TradingPatterns {
 //            System.out.println("===== END OF DAY " + date + " =====");
 //            System.out.println("Total Budget: " + dummy.getBudget());
 //            System.out.println("--------------------------------------\n");
+            double currCash = dummy.getBudget();
+            double currSharesValue = 0.0;
+
+            for (String ticker : dummy.getUserStockETFMap().keySet()) {
+                StockETF stock = dummy.getUserStockETFMap().get(ticker);
+                double lastClose = stock.getPriceMap().get(date).getClose();
+                double sh = dummy.getShares().get(ticker);
+                currSharesValue += sh * lastClose;
+            }
+            double currTotal = currCash + currSharesValue;
+            double currReturnPercent = (currTotal / dummy.getInitialInvestment() * 100.0);
+            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
@@ -167,6 +181,7 @@ public class TradingPatterns {
         for (String ticker : dummy.getUserStockETFMap().keySet()) {
             StockETF stock = dummy.getUserStockETFMap().get(ticker);
             double lastClose = stock.getPriceMap().get(lastDate).getClose();
+            dummy.addEndPrice(ticker, lastClose);
             double sh = dummy.getShares().get(ticker);
             finalSharesValue += sh * lastClose;
         }
@@ -174,7 +189,7 @@ public class TradingPatterns {
         double finalTotal = finalCash + finalSharesValue;
 
         System.out.println("==== FINAL RESULTS ====");
-        System.out.println("Final Cash: " + finalCash);
+//        System.out.println("Final Cash: " + finalCash);
         System.out.println("Final Shares Value: " + finalSharesValue);
         System.out.println("Final Total Portfolio Value: " + finalTotal);
         System.out.println("Initial Investment: " + dummy.getInitialInvestment());
@@ -185,7 +200,7 @@ public class TradingPatterns {
     }
 
     public static Portfolio initializeDummyPortfolio() {
-        int initial = 6000;
+        double initial = 6000.0;
         Map<String, Integer> allocation = new HashMap<>() {
             {
                 put("AAPL", 20);
@@ -202,17 +217,17 @@ public class TradingPatterns {
         int StopLoss = 85;
         int Risk = 30;
         int Target = 130;
-        Map<String, Integer> threshold = new HashMap<>() {
+        Map<String, Double> threshold = new HashMap<>() {
             {
-                put("AAPL", 40);
-                put("AMZN", 80);
-                put("GOOGL", 50);
-                put("TSLA", 35);
-                put("NVDA", 4);
-                put("KO", 45);
-                put("SPYD", 28);
-                put("VOO", 260);
-                put("VTI", 140);
+                put("AAPL", 40.0);
+                put("AMZN", 80.0);
+                put("GOOGL", 50.0);
+                put("TSLA", 35.0);
+                put("NVDA", 4.0);
+                put("KO", 45.0);
+                put("SPYD", 28.0);
+                put("VOO", 260.0);
+                put("VTI", 140.0);
             }
         };
 
@@ -245,6 +260,8 @@ public class TradingPatterns {
             }
         };
 
+        DateResultMap dateResultMap = new DateResultMap();
+
         Portfolio dummyPortfolio = new Portfolio(
                 initial,
                 allocation,
@@ -253,7 +270,8 @@ public class TradingPatterns {
                 Target,
                 threshold,
                 UserStockETFMap,
-                shares
+                shares,
+                dateResultMap
         );
 
         return dummyPortfolio;
@@ -261,5 +279,23 @@ public class TradingPatterns {
 
     public static void main(String[] args) {
         UserTradingPattern();
+//        RunBreakoutTradingPattern(dummy);
+//        RunMomentumTradingPattern(dummy);
+//        DateResultMap newMap = dummy.getDateResultMap();
+//        System.out.println(dummy.getDateResultMap().getDateResults());
+//        dummy.getDateResultMap().dateResultOutput();
+
+        System.out.println();
+        Portfolio dummy2 = initializeDummyPortfolio();
+        BreakoutTradingPattern.RunTradingPattern(dummy2);
+        System.out.println();
+        Portfolio dummy3 = initializeDummyPortfolio();
+        MomentumTradingPattern.RunTradingPattern(dummy3);
+
+        MyDate date = new MyDate("2020-11-17");
+        System.out.println();
+        System.out.println(calculateTotalValueOnDate(date, dummy.getDateResultMap().getDateResults()));
+        System.out.println();
+        sortBestToWorst(dummy);
     }
 }
