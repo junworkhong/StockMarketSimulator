@@ -1,9 +1,6 @@
 package project.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Portfolio {
     private double Budget = 10000.00;
@@ -16,7 +13,9 @@ public class Portfolio {
     private final Map<String, StockETF> UserStockETFMap;
     private Map<String, Double> shares;
     private Map<String, Double> buyPrice = new HashMap<>();
+    private Map<String, Double> endPrice = new HashMap<>();
     private DateResultMap dateResultMap;
+    private final Set<String> stockList = new TreeSet<>();
 
 //    Operation 1 variables
     private double portfolioValue;
@@ -57,6 +56,10 @@ public class Portfolio {
         this.UserStockETFMap = UserStockETFMap;
         this.shares = shares;
         this.dateResultMap = dateMap;
+
+        for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
+            stockList.add(entry.getKey());
+        }
     }
 
 //    Getters and setters for calculations
@@ -117,8 +120,20 @@ public class Portfolio {
         buyPrice.put(ticker, newPrice);
     }
 
+    public Map<String, Double> getEndPrice() {
+        return endPrice;
+    }
+
+    public void addEndPrice(String ticker, double endPrice) {
+        this.endPrice.put(ticker, endPrice);
+    }
+
     public DateResultMap getDateResultMap() {
         return this.dateResultMap;
+    }
+
+    public Set<String> getStockList() {
+        return this.stockList;
     }
 
 //    Getters and setters for results

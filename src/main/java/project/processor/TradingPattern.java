@@ -5,7 +5,7 @@ import project.data.StockETFReader;
 
 import java.util.*;
 
-public abstract class TradingPattern {
+public class TradingPattern implements TradingStrategy{
     private static final StockETFReader reader = StockETFReader.getInstance();
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
     private static final DateCounter dates = new DateCounter();
@@ -17,7 +17,7 @@ public abstract class TradingPattern {
     private static int target;
     private static Map<String, Integer> threshold;
 
-    private static Portfolio initializePortfolio() {
+    public static Portfolio initializePortfolio() {
         Map<String, StockETF> UserStockETFMap = new HashMap<>() {
             {
                 for (Map.Entry<String, Integer> entry : allocationMap.entrySet())
@@ -49,9 +49,9 @@ public abstract class TradingPattern {
         return userPortfolio;
     }
 
-    public static void RunTradingPattern() {
+    public static void RunTradingPattern(Portfolio portfolio){
         Portfolio userPortfolio = initializePortfolio();
-        double budget = userPortfolio.getBudget();
+
         double initial = userPortfolio.getInitialInvestment();
 
         userPortfolio.addBudget((-1)*initial);
@@ -113,13 +113,15 @@ public abstract class TradingPattern {
 
                 double currCash = userPortfolio.getBudget();
                 double currSharesValue = 0.0;
-                StockETF tempStock = userPortfolio.getUserStockETFMap().get(tickerName);
-                double lastClose = tempStock.getPriceMap().get(date).getClose();
-                double sh = userPortfolio.getShares().get(tickerName);
+
+                for (String ticker : userPortfolio.getUserStockETFMap().keySet()) {
+                    StockETF tempStock = userPortfolio.getUserStockETFMap().get(ticker);
+                    double lastClose = tempStock.getPriceMap().get(date).getClose();
+                    double sh = userPortfolio.getShares().get(ticker);
+                    currSharesValue += sh * lastClose;
+                }
                 double currTotal = currCash + currSharesValue;
                 double currReturnPercent = (currTotal / userPortfolio.getInitialInvestment() * 100.0);
-
-                currSharesValue += sh * lastClose;
                 DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
             }
         }
@@ -146,10 +148,6 @@ public abstract class TradingPattern {
 
         System.out.println("Final Budget: " + userPortfolio.getBudget());
         System.out.println("Final Shares Map: " + userPortfolio.getShares());
-    }
-
-    public static void setInitialInvestment(Double initialInvestment) {
-        TradingPattern.initialInvestment = initialInvestment;
     }
 
     public static void setAllocationMap(Map<String, Integer> allocationMap) {

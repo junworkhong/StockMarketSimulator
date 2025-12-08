@@ -25,6 +25,15 @@ public class DateResultMap {
             this.currentTotalValue = currTotalValue;
             this.currentReturnPercent = currReturnPercent;
         }
+
+        @Override
+        public String toString() {
+            return "\nInitial Investment: " + this.initialInvestment +
+                    "\nCurrent Cash: " + this.currentCash +
+                    "\nCurrent Shares Value: " + this.currentSharesValue +
+                    "\nCurrent Total Value: " + this.currentTotalValue +
+                    "\nCurrent Return Percent: " + this.currentReturnPercent;
+        }
     }
 
     public static void addDateResults(MyDate todayDate,
@@ -39,5 +48,11 @@ public class DateResultMap {
 
     public Map<MyDate, DateResults> getDateResults() {
         return map;
+    }
+
+    public void dateResultOutput() {
+        for (Map.Entry<MyDate, DateResults> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
     }
 }

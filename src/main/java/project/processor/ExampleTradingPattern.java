@@ -14,6 +14,9 @@ import project.data.StockETFReader;
 
 import java.util.*;
 
+import static project.processor.SortBestWorstPerformers.sortBestToWorst;
+import static project.processor.TotalValueOnDate.calculateTotalValueOnDate;
+
 public class ExampleTradingPattern {
 //    private static final boolean DEBUG = true;
 
@@ -84,7 +87,6 @@ public class ExampleTradingPattern {
 
         double targetMultiplier = dummy.getTarget() * 0.01;
         double stoplossMultiplier = dummy.getStopLoss() * 0.01;
-
 //        int i = 0;
         for (MyDate date : dates.getDateList()) {
 //            if (i == 30)
@@ -158,6 +160,18 @@ public class ExampleTradingPattern {
 //            System.out.println("===== END OF DAY " + date + " =====");
 //            System.out.println("Total Budget: " + dummy.getBudget());
 //            System.out.println("--------------------------------------\n");
+            double currCash = dummy.getBudget();
+            double currSharesValue = 0.0;
+
+            for (String ticker : dummy.getUserStockETFMap().keySet()) {
+                StockETF stock = dummy.getUserStockETFMap().get(ticker);
+                double lastClose = stock.getPriceMap().get(date).getClose();
+                double sh = dummy.getShares().get(ticker);
+                currSharesValue += sh * lastClose;
+            }
+            double currTotal = currCash + currSharesValue;
+            double currReturnPercent = (currTotal / dummy.getInitialInvestment() * 100.0);
+            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
@@ -167,6 +181,7 @@ public class ExampleTradingPattern {
         for (String ticker : dummy.getUserStockETFMap().keySet()) {
             StockETF stock = dummy.getUserStockETFMap().get(ticker);
             double lastClose = stock.getPriceMap().get(lastDate).getClose();
+            dummy.addEndPrice(ticker, lastClose);
             double sh = dummy.getShares().get(ticker);
             finalSharesValue += sh * lastClose;
         }
@@ -264,5 +279,23 @@ public class ExampleTradingPattern {
 
     public static void main(String[] args) {
         UserTradingPattern();
+//        RunBreakoutTradingPattern(dummy);
+//        RunMomentumTradingPattern(dummy);
+//        DateResultMap newMap = dummy.getDateResultMap();
+//        System.out.println(dummy.getDateResultMap().getDateResults());
+//        dummy.getDateResultMap().dateResultOutput();
+
+        System.out.println();
+        Portfolio dummy2 = initializeDummyPortfolio();
+        BreakoutTradingPattern.RunTradingPattern(dummy2);
+        System.out.println();
+        Portfolio dummy3 = initializeDummyPortfolio();
+        MomentumTradingPattern.RunTradingPattern(dummy3);
+
+        MyDate date = new MyDate("2020-11-17");
+        System.out.println();
+        System.out.println(calculateTotalValueOnDate(date, dummy.getDateResultMap().getDateResults()));
+        System.out.println();
+        sortBestToWorst(dummy);
     }
 }
