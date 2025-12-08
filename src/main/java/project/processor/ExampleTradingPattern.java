@@ -189,7 +189,7 @@ public class ExampleTradingPattern {
         double finalTotal = finalCash + finalSharesValue;
 
         System.out.println("==== FINAL RESULTS ====");
-        System.out.println("Final Cash: " + finalCash);
+//        System.out.println("Final Cash: " + finalCash);
         System.out.println("Final Shares Value: " + finalSharesValue);
         System.out.println("Final Total Portfolio Value: " + finalTotal);
         System.out.println("Initial Investment: " + dummy.getInitialInvestment());
@@ -217,17 +217,17 @@ public class ExampleTradingPattern {
         int StopLoss = 85;
         int Risk = 30;
         int Target = 130;
-        Map<String, Integer> threshold = new HashMap<>() {
+        Map<String, Double> threshold = new HashMap<>() {
             {
-                put("AAPL", 40);
-                put("AMZN", 80);
-                put("GOOGL", 50);
-                put("TSLA", 35);
-                put("NVDA", 4);
-                put("KO", 45);
-                put("SPYD", 28);
-                put("VOO", 260);
-                put("VTI", 140);
+                put("AAPL", 40.0);
+                put("AMZN", 80.0);
+                put("GOOGL", 50.0);
+                put("TSLA", 35.0);
+                put("NVDA", 4.0);
+                put("KO", 45.0);
+                put("SPYD", 28.0);
+                put("VOO", 260.0);
+                put("VTI", 140.0);
             }
         };
 

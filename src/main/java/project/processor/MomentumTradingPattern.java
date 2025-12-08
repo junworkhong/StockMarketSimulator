@@ -122,7 +122,7 @@ public class MomentumTradingPattern implements TradingStrategy{
         double finalTotal = finalCash + finalSharesValue;
 
         System.out.println("==== MOMENTUM PATTERN RESULTS ====");
-        System.out.println("Final Cash: " + finalCash);
+//        System.out.println("Final Cash: " + finalCash);
         System.out.println("Final Shares Value: " + finalSharesValue);
         System.out.println("Final Total Portfolio Value: " + finalTotal);
         System.out.println("Initial Investment: " + portfolio.getInitialInvestment());

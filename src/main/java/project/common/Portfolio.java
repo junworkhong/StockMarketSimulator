@@ -9,9 +9,10 @@ public class Portfolio {
     private final int StopLossPercentage;
     private final int RiskPercentage;
     private final int TargetPercentage;
-    private final Map<String, Integer> ThresholdPrice;
+    private final Map<String, Double> ThresholdPrice;
     private final Map<String, StockETF> UserStockETFMap;
     private Map<String, Double> shares;
+    private Map<String, Double> initialShares = new HashMap<>();
     private Map<String, Double> buyPrice = new HashMap<>();
     private Map<String, Double> endPrice = new HashMap<>();
     private DateResultMap dateResultMap;
@@ -43,7 +44,7 @@ public class Portfolio {
                      int StopLoss,
                      int Risk,
                      int Target,
-                     Map<String, Integer> Threshold,
+                     Map<String, Double> Threshold,
                      Map<String, StockETF> UserStockETFMap,
                      Map <String, Double> shares,
                      DateResultMap dateMap) {
@@ -92,7 +93,7 @@ public class Portfolio {
         return this.TargetPercentage;
     }
 
-    public Map<String, Integer> getThreshold() {
+    public Map<String, Double> getThreshold() {
         return this.ThresholdPrice;
     }
 
@@ -108,8 +109,18 @@ public class Portfolio {
         this.shares.put(ticker, this.shares.get(ticker) + shares);
     }
 
+    public void initializeShares(String ticker, Double shares) {
+        this.initialShares.put(ticker, shares);
+    }
+
     public void sellShares(String ticker) {
         this.shares.put(ticker, 0.0);
+    }
+
+    public void resetShares(String... tickers) {
+        for (String t : tickers) {
+            this.shares.put(t, 0.0);
+        }
     }
 
     public Map<String, Double> getBuyPrice() {
@@ -134,6 +145,10 @@ public class Portfolio {
 
     public Set<String> getStockList() {
         return this.stockList;
+    }
+
+    public Map<String, Double> getInitialShares() {
+        return this.initialShares;
     }
 
 //    Getters and setters for results
