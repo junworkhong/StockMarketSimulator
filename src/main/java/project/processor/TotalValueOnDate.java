@@ -6,13 +6,14 @@ import project.common.MyDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static project.ui.SimulatorUI.checkIfInteger;
-import static project.ui.SimulatorUI.checkIfPositiveInteger;
+import project.ui.SimulatorUI;
 
 public class TotalValueOnDate {
     private static Map<MyDate, String> results = new HashMap<>();
 
-    public static String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
+    public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
+            SimulatorUI sim = new SimulatorUI();
+
             try {
                 if (date == null)
                     throw new IllegalArgumentException("Invalid date");
@@ -29,7 +30,7 @@ public class TotalValueOnDate {
                 int month;
                 int day;
 
-                if (checkIfPositiveInteger(split[0], split[1], split[2])) {
+                if (sim.checkIfPositiveInteger(split[0], split[1], split[2])) {
                     year = Integer.parseInt(split[0]);
                     month = Integer.parseInt(split[1]);
                     day = Integer.parseInt(split[2]);

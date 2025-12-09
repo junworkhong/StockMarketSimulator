@@ -15,7 +15,7 @@ public class BreakoutTradingPattern implements TradingStrategy {
 //    private static int target;
 //    private static Map<String, Integer> threshold;
 
-    public static void RunTradingPattern(Portfolio UserPortfolio) {
+    public void RunTradingPattern(Portfolio UserPortfolio) {
         Portfolio portfolio = UserPortfolio.copy();
 
         double initial = portfolio.getInitialInvestment();
@@ -107,13 +107,13 @@ public class BreakoutTradingPattern implements TradingStrategy {
 
         System.out.println("\n==== BREAKOUT PATTERN RESULTS ====");
         System.out.println("(Breakout Pattern takes your trading pattern but also sells when closing price is lower than the buy price)");
+        System.out.println("\nFinal Shares: " + portfolio.getShares().toString());
         System.out.println("Final Budget: $" + finalCash);
         System.out.println("Final Shares Value: $" + finalSharesValue);
         System.out.println("Final Total Portfolio Value: $" + finalTotal);
 //        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
         System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
         System.out.println("Total Profit/Loss: $" + (finalCash - portfolio.getInitialInvestment()));
-        System.out.println("Final Shares: " + portfolio.getShares().toString());
 //        System.out.println("\nFinal Shares: ");
 //
 //        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {

@@ -10,13 +10,10 @@ import project.processor.*;
 
 import java.util.*;
 
-import static project.processor.SortBestWorstPerformers.sortBestToWorst;
-import static project.processor.TotalValueOnDate.calculateTotalValueOnDate;
-
 public class SimulatorUI {
     TradingStrategy tradingStrategy;
 
-    public static boolean checkIfInteger (String... input) {
+    public boolean checkIfInteger (String... input) {
         for (String s : input) {
             if (s.trim().matches("-?\\d+"))
                 return true;
@@ -24,7 +21,7 @@ public class SimulatorUI {
         return false;
     }
 
-    public static boolean checkIfPositiveInteger (String... input) {
+    public boolean checkIfPositiveInteger (String... input) {
         if (checkIfInteger(input)) {
             for (String s : input) {
                if (Integer.parseInt(s) >= 0)
@@ -35,7 +32,7 @@ public class SimulatorUI {
 //        return checkIfInteger(input) && (Integer.parseInt(input) >= 0);
     }
 
-    public static void start() {
+    public void start() {
         System.out.println("Welcome to the Stock Market Simulator!");
         Scanner sc = new Scanner(System.in);
         System.out.println("Here are the list of stocks and ETFs to choose from:");
@@ -239,7 +236,9 @@ public class SimulatorUI {
                     dateResultMap
             );
 
-            TradingPattern.RunTradingPattern(userPortfolio);
+            TradingPattern userTrade = new TradingPattern();
+            userPortfolio.setStrategy(userTrade);
+            userPortfolio.execute(userPortfolio);
 
             userPortfolio.setThresholdPercentage(thresholdPercent);
             userPortfolio.setRemainingInitial(remaining);
@@ -248,13 +247,13 @@ public class SimulatorUI {
 
             String[] menuHeader = {"Menu"};
             String[][] menuData = {
-                    {"Operation 0: View portfolio"},
+                    {"Operation 0: Exit program"},
                     {"Operation 1: Calculate total value of portfolio on selected date"},
                     {"Operation 2: Show Profit/Loss Percentage for a chosen stock/ETF"},
                     {"Operation 3: Compare portfolio performance to S&P 500 performance"},
                     {"Operation 4: Compare your trading pattern and results to other trading patterns"},
                     {"Operation 5: Sort all stocks and ETFs by best and worst performing"},
-                    {"Operation 6: Exit program"}
+                    {"Operation 6: View portfolio"}
             };
 
             on = true;
@@ -291,8 +290,8 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
                 int option = Integer.parseInt(input);
                 switch (option) {
                     case 0:
-                        viewInitialPortfolio(userPortfolio);
-                        break;
+                        System.out.println("Goodbye!");
+                        on = false;
                     case 1:
                         operationOne(userPortfolio.getDateResultMap().getDateResults());
                         break;
@@ -309,14 +308,15 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
                         operationFive(userPortfolio);
                         break;
                     case 6:
-                        on = false;
+                        viewInitialPortfolio(userPortfolio);
+                        break;
                 }
             }
         }
 
-    public static void viewInitialPortfolio (Portfolio userPortfolio) {
+    public void viewInitialPortfolio (Portfolio userPortfolio) {
         System.out.println("\nThis is your initial portfolio: ");
-        System.out.println(userPortfolio.getInitialShares().toString());
+        System.out.println("Initial shares: \n" + userPortfolio.getInitialShares().toString());
 //        System.out.println("\nInitial Shares: ");
 //        for (Map.Entry<String, Double> entry :  userPortfolio.getInitialShares().entrySet()) {
 //            System.out.println(entry.getKey() + ": " + entry.getValue());
@@ -332,24 +332,21 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
         System.out.println("Buy Threshold Percentage: " + userPortfolio.getThresholdPercentage() + "%");
 
         System.out.println("\n==== YOUR TRADING PATTERN RESULTS ====");
+        System.out.println("Final Shares: \n" + userPortfolio.getShares().toString());
         System.out.println("Final Budget: $" + userPortfolio.getBudget());
         System.out.println("Final Shares Value: $" + userPortfolio.getFinalSharesValue());
         System.out.println("Final Total Portfolio Value: $" + userPortfolio.getFinalTotal());
         System.out.println("Total Return Percentage: " + userPortfolio.getTotalReturnPercentage() + "%");
         System.out.println("Total Profit/Loss: $" + userPortfolio.getTotalProfit());
-        System.out.println("\nFinal Shares: ");
-
-        for (Map.Entry<String, Double> entry :  userPortfolio.getShares().entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
 
         returnToMenu();
     }
 
-    public static void operationOne(Map<MyDate, DateResultMap.DateResults> map) {
+    public void operationOne(Map<MyDate, DateResultMap.DateResults> map) {
         boolean on = true;
+        TotalValueOnDate total =  new TotalValueOnDate();
         while (on) {
-            System.out.println("Please enter a date in the format yyyy-mm-dd starting from 2020-01-03 to 2025-11-14 or enter 0 to return to menu");
+            System.out.println("\nPlease enter a date in the format yyyy-mm-dd starting from 2020-01-03 to 2025-11-14 or enter 0 to return to menu");
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
 
@@ -357,22 +354,22 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
                 on = false;
             else {
                 MyDate myDate = new MyDate(input);
-                System.out.println(calculateTotalValueOnDate(myDate, map));
+                System.out.println(total.calculateTotalValueOnDate(myDate, map));
             }
         }
     }
 
-    public static void operationTwo() {
+    public void operationTwo() {
         returnToMenu();
     }
 
-    public static void operationThree() {
+    public void operationThree() {
         returnToMenu();
     }
 
-    public static void operationFour(Portfolio portfolio) {
+    public void operationFour(Portfolio portfolio) {
         System.out.println("\nThis is your initial portfolio: ");
-        System.out.println("Initial Shares: " + portfolio.getInitialShares().toString());
+        System.out.println("Initial Shares: \n" + portfolio.getInitialShares().toString());
 //        for (Map.Entry<String, Double> entry :  portfolio.getInitialShares().entrySet()) {
 //            System.out.println(entry.getKey() + ": " + entry.getValue());
 //        }
@@ -386,45 +383,51 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
         System.out.println("Buy Threshold Percentage: " + portfolio.getThresholdPercentage() + "%");
 
         System.out.println("\n==== YOUR TRADING PATTERN RESULTS ====");
+        System.out.println("\nFinal Shares: " + portfolio.getShares().toString());
         System.out.println("Final Budget: $" + portfolio.getBudget());
         System.out.println("Final Shares Value: $" + portfolio.getFinalSharesValue());
         System.out.println("Final Total Portfolio Value: $" + portfolio.getFinalTotal());
         System.out.println("Total Return Percentage: " + portfolio.getTotalReturnPercentage() + "%");
         System.out.println("Total Profit/Loss: $" + portfolio.getTotalProfit());
-        System.out.println("Final Shares: " + portfolio.getShares().toString());
 //        System.out.println("\nFinal Shares: ");
 //
 //        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
 //            System.out.println(entry.getKey() + ": " + entry.getValue());
 //        }
 
-        BreakoutTradingPattern.RunTradingPattern(portfolio);
-        MomentumTradingPattern.RunTradingPattern(portfolio);
+        BreakoutTradingPattern breakout = new BreakoutTradingPattern();
+        portfolio.setStrategy(breakout);
+        portfolio.execute(portfolio);
+
+        MomentumTradingPattern momentum = new MomentumTradingPattern();
+        portfolio.setStrategy(momentum);
+        portfolio.execute(portfolio);
 
         returnToMenu();
     }
 
 
-    public static void operationFive(Portfolio portfolio) {
-        sortBestToWorst(portfolio);
+    public void operationFive(Portfolio portfolio) {
+        SortBestWorstPerformers sort = new SortBestWorstPerformers();
+        sort.sortBestToWorst(portfolio);
         returnToMenu();
     }
 
-    public static void returnToMenu() {
+    public void returnToMenu() {
         boolean on = true;
         while (on) {
             System.out.println("Enter 0 to return: ");
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
             if (checkIfInteger(input) && Integer.parseInt(input) == 0) {
-                break;
+                on = false;
             }
-            on = false;
         }
     }
 
 
     public static void main(String[] args) {
+        SimulatorUI sim = new SimulatorUI();
 //        String [] header = {};
 //        String[][] data = {
 //                { "Ram", "2000", "Manager", "#99, Silk board", "1111"  },
@@ -437,6 +440,6 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
 //                { "BTC"},
 //        };
 //        ASCIITable.getInstance().printTable(header, data);
-        start();
+        sim.start();
     }
 }

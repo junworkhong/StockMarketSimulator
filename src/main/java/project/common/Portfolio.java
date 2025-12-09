@@ -1,8 +1,13 @@
 package project.common;
 
+import project.processor.TradingPattern;
+import project.processor.TradingStrategy;
+
 import java.util.*;
 
 public class Portfolio {
+    private TradingStrategy strategy;
+
     private double Budget = 10000.00;
     private final double InitialInvestment;
     private final Map<String, Integer> Allocations;
@@ -81,6 +86,17 @@ public class Portfolio {
                 this.UserStockETFMap,
                 this.shares,
                 this.dateResultMap);
+    }
+
+    public void setStrategy(TradingStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void execute(Portfolio portfolio) {
+        if (this.strategy == null)
+            this.strategy = new TradingPattern();
+
+        strategy.RunTradingPattern(portfolio);
     }
 
 //    Getters and setters for calculations

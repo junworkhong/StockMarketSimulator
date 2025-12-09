@@ -17,7 +17,7 @@ public class TradingPattern implements TradingStrategy{
     private static int target;
     private static Map<String, Double> threshold;
 
-    public static Portfolio initializePortfolio() {
+    public Portfolio initializePortfolio() {
         Map<String, StockETF> UserStockETFMap = new HashMap<>() {
             {
                 for (Map.Entry<String, Integer> entry : allocationMap.entrySet())
@@ -49,7 +49,7 @@ public class TradingPattern implements TradingStrategy{
         return userPortfolio;
     }
 
-    public static void RunTradingPattern(Portfolio portfolio){
+    public void RunTradingPattern(Portfolio portfolio){
 //        Portfolio portfolio = initializePortfolio();
 
         double initial = portfolio.getInitialInvestment();
@@ -126,7 +126,7 @@ public class TradingPattern implements TradingStrategy{
                 }
                 double currTotal = currCash + currSharesValue;
                 double currReturnPercent = (currTotal / portfolio.getInitialInvestment() * 100.0);
-                DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
+                DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, portfolio.getShares());
             }
         }
 
@@ -159,23 +159,23 @@ public class TradingPattern implements TradingStrategy{
 //        System.out.println("Final Shares Map: " + userPortfolio.getShares());
     }
 
-    public static void setAllocationMap(Map<String, Integer> allocationMap) {
+    public void setAllocationMap(Map<String, Integer> allocationMap) {
         TradingPattern.allocationMap = allocationMap;
     }
 
-    public static void setStopLoss(int stopLoss) {
+    public void setStopLoss(int stopLoss) {
         TradingPattern.stopLoss = stopLoss;
     }
 
-    public static void setRisk(int risk) {
+    public void setRisk(int risk) {
         TradingPattern.risk = risk;
     }
 
-    public static void setTarget(int target) {
+    public void setTarget(int target) {
         TradingPattern.target = target;
     }
 
-    public static void setThreshold(Map<String, Double> threshold) {
+    public void setThreshold(Map<String, Double> threshold) {
         TradingPattern.threshold = threshold;
     }
 }
