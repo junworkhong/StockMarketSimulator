@@ -7,7 +7,8 @@ import java.util.Map;
 public class MomentumTradingPattern implements TradingStrategy{
     private static final DateCounter dates = new DateCounter();
 
-    public static void RunTradingPattern(Portfolio portfolio) {
+    public static void RunTradingPattern(Portfolio UserPortfolio) {
+        Portfolio portfolio = UserPortfolio.copy();
         double initial = portfolio.getInitialInvestment();
 
         portfolio.addBudget((-1)*initial);
@@ -121,15 +122,20 @@ public class MomentumTradingPattern implements TradingStrategy{
 
         double finalTotal = finalCash + finalSharesValue;
 
-        System.out.println("==== MOMENTUM PATTERN RESULTS ====");
-//        System.out.println("Final Cash: " + finalCash);
-        System.out.println("Final Shares Value: " + finalSharesValue);
-        System.out.println("Final Total Portfolio Value: " + finalTotal);
-        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
-        System.out.println("Total Return %: " + (finalTotal / portfolio.getInitialInvestment() * 100.0));
-
-        System.out.println("Final Budget: " + portfolio.getBudget());
-        System.out.println("Final Shares Map: " + portfolio.getShares());
+        System.out.println("\n==== MOMENTUM PATTERN RESULTS ====");
+        System.out.println("(Momentum Pattern buys shares when today's closing price is higher than yesterday's closing price, and yesterday's closing price is also higher than the closing price 2 days ago. It sells when today's closing price is lower than yesterday's closing price)");
+        System.out.println("Final Budget: $" + finalCash);
+        System.out.println("Final Shares Value: $" + finalSharesValue);
+        System.out.println("Final Total Portfolio Value: $" + finalTotal);
+//        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
+        System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
+        System.out.println("Total Profit/Loss: $" + (finalCash - portfolio.getInitialInvestment()));
+        System.out.println("Final Shares: " + portfolio.getShares().toString());
+//        System.out.println("\nFinal Shares Map: " + portfolio.getShares());
+//
+//        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
     }
     }
 

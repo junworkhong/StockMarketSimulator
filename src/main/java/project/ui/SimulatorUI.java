@@ -6,20 +6,33 @@ import project.common.MyDate;
 import project.common.Portfolio;
 import project.common.StockETF;
 import project.data.StockETFReader;
-import project.processor.TradingPattern;
-import project.processor.TradingStrategy;
+import project.processor.*;
 
 import java.util.*;
+
+import static project.processor.SortBestWorstPerformers.sortBestToWorst;
+import static project.processor.TotalValueOnDate.calculateTotalValueOnDate;
 
 public class SimulatorUI {
     TradingStrategy tradingStrategy;
 
-    public static boolean checkIfInteger (String input) {
-        return (input.trim().matches("-?\\d+"));
+    public static boolean checkIfInteger (String... input) {
+        for (String s : input) {
+            if (s.trim().matches("-?\\d+"))
+                return true;
+        }
+        return false;
     }
 
-    public static boolean checkIfPositiveInteger (String input) {
-        return checkIfInteger(input) && (Integer.parseInt(input) >= 0);
+    public static boolean checkIfPositiveInteger (String... input) {
+        if (checkIfInteger(input)) {
+            for (String s : input) {
+               if (Integer.parseInt(s) >= 0)
+                   return true;
+            }
+        }
+        return false;
+//        return checkIfInteger(input) && (Integer.parseInt(input) >= 0);
     }
 
     public static void start() {
@@ -59,7 +72,7 @@ public class SimulatorUI {
 
         ASCIITable.getInstance().printTable(header, data);
 
-        System.out.println("Your starting budget is $10,000. How much of it would you like to invest? ");
+        System.out.println("Your starting budget is $10000.00. How much of it would you like to invest? (Enter a number between 1-10000): ");
 
         boolean on = true;
         double initialInvestment = 0.0;
@@ -74,7 +87,7 @@ public class SimulatorUI {
                 if (initialInvestment <= 0 || initialInvestment > 10000)
                     throw new IllegalArgumentException("Please enter a valid amount");
 
-                System.out.println("List the percentages of your initial $" + initialInvestment + " that you'd like to allocate for each stock. You can enter 0, but please use whole numbers!");
+                System.out.println("List the percentages of your initial $" + initialInvestment + "0 that you'd like to allocate for each stock. You can enter 0, but please use whole numbers!");
 //                break;
                 on = false;
             } catch (IllegalArgumentException e) {
@@ -228,19 +241,188 @@ public class SimulatorUI {
 
             TradingPattern.RunTradingPattern(userPortfolio);
 
-            System.out.println("\nThis is your initial portfolio: ");
-            System.out.println(userPortfolio.getInitialShares().toString());
-            System.out.println("Initial Budget: $10000.00");
-            System.out.println("Initial Investment: $" + initialInvestment);
-            System.out.println("Current Budget: $" + remaining);
-            System.out.println("Allocations: " + userPortfolio.getAllocations().toString());
-            System.out.println("Stop Loss Percentage: " + stopLoss + "%");
-            System.out.println("Risk Percentage: " + risk + "%");
-            System.out.println("Target Percentage: " + target + "%");
-            System.out.println("Buy Threshold Percentage: " + thresholdPercent + "%");
+            userPortfolio.setThresholdPercentage(thresholdPercent);
+            userPortfolio.setRemainingInitial(remaining);
 
-            System.out.println("What would you like to view?");
+            viewInitialPortfolio(userPortfolio);
+
+            String[] menuHeader = {"Menu"};
+            String[][] menuData = {
+                    {"Operation 0: View portfolio"},
+                    {"Operation 1: Calculate total value of portfolio on selected date"},
+                    {"Operation 2: Show Profit/Loss Percentage for a chosen stock/ETF"},
+                    {"Operation 3: Compare portfolio performance to S&P 500 performance"},
+                    {"Operation 4: Compare your trading pattern and results to other trading patterns"},
+                    {"Operation 5: Sort all stocks and ETFs by best and worst performing"},
+                    {"Operation 6: Exit program"}
+            };
+
+            on = true;
+
+            String input;
+
+            while (on) {
+                ASCIITable.getInstance().printTable(menuHeader, menuData, ASCIITable.ALIGN_CENTER);
+                System.out.println("What would you like to view? Please enter a number from 0 to 6: ");
+
+                input = sc.nextLine();
+                boolean on2 = true;
+                while (on2) {
+                    try {
+                        if (!checkIfPositiveInteger(input))
+                            throw new IllegalArgumentException("Please try again");
+                        int option = Integer.parseInt(input);
+                        if (option < 0 || option > 6)
+                            throw new IllegalArgumentException("Please enter a number from 0 to 6");
+                        on2 = false;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                }
+
+            /*
+            Operation 1: Calculate total value of portfolio on selected date (Jun)
+Operation 2: Showing profit/loss percentage for a chosen stock/ETF (Eric)
+Operation 3: Comparing portfolio performance to S&P 500 Benchmark (Eric)
+Operation 4: Different trading patterns and reporting total return (Eric + a little by Jun)
+Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
+
+             */
+                int option = Integer.parseInt(input);
+                switch (option) {
+                    case 0:
+                        viewInitialPortfolio(userPortfolio);
+                        break;
+                    case 1:
+                        operationOne(userPortfolio.getDateResultMap().getDateResults());
+                        break;
+                    case 2:
+                        operationTwo();
+                        break;
+                    case 3:
+                        operationThree();
+                        break;
+                    case 4:
+                        operationFour(userPortfolio);
+                        break;
+                    case 5:
+                        operationFive(userPortfolio);
+                        break;
+                    case 6:
+                        on = false;
+                }
+            }
         }
+
+    public static void viewInitialPortfolio (Portfolio userPortfolio) {
+        System.out.println("\nThis is your initial portfolio: ");
+        System.out.println(userPortfolio.getInitialShares().toString());
+//        System.out.println("\nInitial Shares: ");
+//        for (Map.Entry<String, Double> entry :  userPortfolio.getInitialShares().entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+
+        System.out.println("Initial Budget: $10000.00");
+        System.out.println("Initial Investment: $" + userPortfolio.getInitialInvestment());
+        System.out.println("Initial Remaining Budget: $" + userPortfolio.getRemainingInitial());
+        System.out.println("Allocations %: " + userPortfolio.getAllocations().toString());
+        System.out.println("Stop Loss Percentage: " + userPortfolio.getStopLoss() + "%");
+        System.out.println("Risk Percentage: " + userPortfolio.getRisk() + "%");
+        System.out.println("Target Percentage: " + userPortfolio.getTarget() + "%");
+        System.out.println("Buy Threshold Percentage: " + userPortfolio.getThresholdPercentage() + "%");
+
+        System.out.println("\n==== YOUR TRADING PATTERN RESULTS ====");
+        System.out.println("Final Budget: $" + userPortfolio.getBudget());
+        System.out.println("Final Shares Value: $" + userPortfolio.getFinalSharesValue());
+        System.out.println("Final Total Portfolio Value: $" + userPortfolio.getFinalTotal());
+        System.out.println("Total Return Percentage: " + userPortfolio.getTotalReturnPercentage() + "%");
+        System.out.println("Total Profit/Loss: $" + userPortfolio.getTotalProfit());
+        System.out.println("\nFinal Shares: ");
+
+        for (Map.Entry<String, Double> entry :  userPortfolio.getShares().entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        returnToMenu();
+    }
+
+    public static void operationOne(Map<MyDate, DateResultMap.DateResults> map) {
+        boolean on = true;
+        while (on) {
+            System.out.println("Please enter a date in the format yyyy-mm-dd starting from 2020-01-03 to 2025-11-14 or enter 0 to return to menu");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
+
+            if (checkIfInteger(input) && Integer.parseInt(input) == 0)
+                on = false;
+            else {
+                MyDate myDate = new MyDate(input);
+                System.out.println(calculateTotalValueOnDate(myDate, map));
+            }
+        }
+    }
+
+    public static void operationTwo() {
+        returnToMenu();
+    }
+
+    public static void operationThree() {
+        returnToMenu();
+    }
+
+    public static void operationFour(Portfolio portfolio) {
+        System.out.println("\nThis is your initial portfolio: ");
+        System.out.println("Initial Shares: " + portfolio.getInitialShares().toString());
+//        for (Map.Entry<String, Double> entry :  portfolio.getInitialShares().entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+        System.out.println("Initial Budget: $10000.00");
+        System.out.println("Initial Investment: $" + portfolio.getInitialInvestment());
+        System.out.println("Initial Remaining Budget: $" + portfolio.getRemainingInitial());
+        System.out.println("Allocations %: " + portfolio.getAllocations().toString());
+        System.out.println("Stop Loss Percentage: " + portfolio.getStopLoss() + "%");
+        System.out.println("Risk Percentage: " + portfolio.getRisk() + "%");
+        System.out.println("Target Percentage: " + portfolio.getTarget() + "%");
+        System.out.println("Buy Threshold Percentage: " + portfolio.getThresholdPercentage() + "%");
+
+        System.out.println("\n==== YOUR TRADING PATTERN RESULTS ====");
+        System.out.println("Final Budget: $" + portfolio.getBudget());
+        System.out.println("Final Shares Value: $" + portfolio.getFinalSharesValue());
+        System.out.println("Final Total Portfolio Value: $" + portfolio.getFinalTotal());
+        System.out.println("Total Return Percentage: " + portfolio.getTotalReturnPercentage() + "%");
+        System.out.println("Total Profit/Loss: $" + portfolio.getTotalProfit());
+        System.out.println("Final Shares: " + portfolio.getShares().toString());
+//        System.out.println("\nFinal Shares: ");
+//
+//        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+
+        BreakoutTradingPattern.RunTradingPattern(portfolio);
+        MomentumTradingPattern.RunTradingPattern(portfolio);
+
+        returnToMenu();
+    }
+
+
+    public static void operationFive(Portfolio portfolio) {
+        sortBestToWorst(portfolio);
+        returnToMenu();
+    }
+
+    public static void returnToMenu() {
+        boolean on = true;
+        while (on) {
+            System.out.println("Enter 0 to return: ");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
+            if (checkIfInteger(input) && Integer.parseInt(input) == 0) {
+                break;
+            }
+            on = false;
+        }
+    }
+
 
     public static void main(String[] args) {
 //        String [] header = {};

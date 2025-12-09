@@ -15,7 +15,9 @@ public class BreakoutTradingPattern implements TradingStrategy {
 //    private static int target;
 //    private static Map<String, Integer> threshold;
 
-    public static void RunTradingPattern(Portfolio portfolio) {
+    public static void RunTradingPattern(Portfolio UserPortfolio) {
+        Portfolio portfolio = UserPortfolio.copy();
+
         double initial = portfolio.getInitialInvestment();
 
         portfolio.addBudget((-1)*initial);
@@ -103,15 +105,20 @@ public class BreakoutTradingPattern implements TradingStrategy {
 
         double finalTotal = finalCash + finalSharesValue;
 
-        System.out.println("==== BREAKOUT PATTERN RESULTS ====");
-//        System.out.println("Final Cash: " + finalCash);
-        System.out.println("Final Shares Value: " + finalSharesValue);
-        System.out.println("Final Total Portfolio Value: " + finalTotal);
-        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
-        System.out.println("Total Return %: " + (finalTotal / portfolio.getInitialInvestment() * 100.0));
-
-        System.out.println("Final Budget: " + portfolio.getBudget());
-        System.out.println("Final Shares Map: " + portfolio.getShares());
+        System.out.println("\n==== BREAKOUT PATTERN RESULTS ====");
+        System.out.println("(Breakout Pattern takes your trading pattern but also sells when closing price is lower than the buy price)");
+        System.out.println("Final Budget: $" + finalCash);
+        System.out.println("Final Shares Value: $" + finalSharesValue);
+        System.out.println("Final Total Portfolio Value: $" + finalTotal);
+//        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
+        System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
+        System.out.println("Total Profit/Loss: $" + (finalCash - portfolio.getInitialInvestment()));
+        System.out.println("Final Shares: " + portfolio.getShares().toString());
+//        System.out.println("\nFinal Shares: ");
+//
+//        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
     }
 
 //    public static void RunBreakoutTradingPattern(Portfolio portfolio) {

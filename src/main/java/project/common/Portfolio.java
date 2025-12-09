@@ -39,6 +39,14 @@ public class Portfolio {
     private String biggestLoser;
     private double strategyReturn;
 
+    private double thresholdPercentage;
+    private double remainingInitial;
+
+    private double finalSharesValue;
+    private double finalTotal;
+    private double totalReturnPercentage;
+    private double totalProfit;
+
     public Portfolio(double initialInvestment,
                      Map<String, Integer> Allocations,
                      int StopLoss,
@@ -61,6 +69,18 @@ public class Portfolio {
         for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
             stockList.add(entry.getKey());
         }
+    }
+
+    public Portfolio copy() {
+        return new Portfolio(this.InitialInvestment,
+                this.Allocations,
+                this.StopLossPercentage,
+                this.RiskPercentage,
+                this.TargetPercentage,
+                this.ThresholdPrice,
+                this.UserStockETFMap,
+                this.shares,
+                this.dateResultMap);
     }
 
 //    Getters and setters for calculations
@@ -152,6 +172,62 @@ public class Portfolio {
     }
 
 //    Getters and setters for results
+
+    public double getRemainingInitial() {
+        return remainingInitial;
+    }
+
+    public void setRemainingInitial(double remainingBudget) {
+        this.remainingInitial = remainingBudget;
+    }
+
+    public double getThresholdPercentage() {
+        return thresholdPercentage;
+    }
+
+    public void setThresholdPercentage(double thresholdPercentage) {
+        this.thresholdPercentage = thresholdPercentage;
+    }
+
+    public double getFinalSharesValue() {
+        return finalSharesValue;
+    }
+
+    public void setFinalSharesValue(double finalSharesValue) {
+        this.finalSharesValue = finalSharesValue;
+    }
+
+    public double getFinalTotal() {
+        return finalTotal;
+    }
+
+    public void setFinalTotal(double finalTotal) {
+        this.finalTotal = finalTotal;
+    }
+
+    public double getTotalReturnPercentage() {
+        return totalReturnPercentage;
+    }
+
+    public void setTotalReturnPercentage(double totalReturnPercentage) {
+        this.totalReturnPercentage = totalReturnPercentage;
+    }
+
+    public double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
+
+
+
+
+
+
+
 
     public double getStrategyReturn() {
         return strategyReturn;

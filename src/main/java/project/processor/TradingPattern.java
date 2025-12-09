@@ -99,11 +99,12 @@ public class TradingPattern implements TradingStrategy{
                 double thresholdPrice = portfolio.getThreshold().get(tickerName);
                 double risk = portfolio.getRisk() * 0.01 * portfolio.getBudget();
 
-                if (shares == 0) {
+                if (shares == 0.0) {
                     if (closePrice > thresholdPrice && (portfolio.getBudget() > risk)) {
                         Double amountToBuy = risk/closePrice;
 
                         portfolio.addBuyPrice(tickerName, closePrice);
+                        portfolio.addEndPrice(tickerName, closePrice);
                         portfolio.addShares(tickerName, amountToBuy);
                         portfolio.addBudget((-1)* risk);
                     }
@@ -141,6 +142,11 @@ public class TradingPattern implements TradingStrategy{
         }
 
         double finalTotal = finalCash + finalSharesValue;
+
+        portfolio.setFinalSharesValue(finalSharesValue);
+        portfolio.setFinalTotal(finalTotal);
+        portfolio.setTotalReturnPercentage((finalTotal) / portfolio.getInitialInvestment() * 100.0);
+        portfolio.setTotalProfit(portfolio.getBudget() - portfolio.getInitialInvestment());
 
 //        System.out.println("==== FINAL RESULTS ====");
 ////        System.out.println("Final Cash: " + finalCash);
