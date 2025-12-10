@@ -24,7 +24,6 @@ public class Portfolio {
     private final Set<String> stockList = new TreeSet<>();
 
 //    Operation 1 variables
-    private double portfolioValue;
     private double totalProfitLoss;
     private double totalProfitLossPercent;
 
@@ -36,14 +35,6 @@ public class Portfolio {
     private double SPReturnOverUnder;
 
 //    Operation 4 variables
-    private int totalTrades;
-    private int winningTrades;
-    private int losingTrades;
-    private double winRate;
-    private String biggestWinner;
-    private String biggestLoser;
-    private double strategyReturn;
-
     private double thresholdPercentage;
     private double remainingInitial;
 
@@ -238,69 +229,6 @@ public class Portfolio {
     }
 
 
-
-
-
-
-
-
-
-    public double getStrategyReturn() {
-        return strategyReturn;
-    }
-
-    public void setStrategyReturn(double strategyReturn) {
-        this.strategyReturn = strategyReturn;
-    }
-
-    public String getBiggestLoser() {
-        return biggestLoser;
-    }
-
-    public void setBiggestLoser(String biggestLoser) {
-        this.biggestLoser = biggestLoser;
-    }
-
-    public String getBiggestWinner() {
-        return biggestWinner;
-    }
-
-    public void setBiggestWinner(String biggestWinner) {
-        this.biggestWinner = biggestWinner;
-    }
-
-    public double getWinRate() {
-        return winRate;
-    }
-
-    public void setWinRate(double winRate) {
-        this.winRate = winRate;
-    }
-
-    public int getLosingTrades() {
-        return losingTrades;
-    }
-
-    public void setLosingTrades(int losingTrades) {
-        this.losingTrades = losingTrades;
-    }
-
-    public int getWinningTrades() {
-        return winningTrades;
-    }
-
-    public void setWinningTrades(int winningTrades) {
-        this.winningTrades = winningTrades;
-    }
-
-    public int getTotalTrades() {
-        return totalTrades;
-    }
-
-    public void setTotalTrades(int totalTrades) {
-        this.totalTrades = totalTrades;
-    }
-
     public double getSPReturnOverUnder() {
         return SPReturnOverUnder;
     }
@@ -341,11 +269,4 @@ public class Portfolio {
         this.totalProfitLoss = totalProfitLoss;
     }
 
-    public double getPortfolioValue() {
-        return portfolioValue;
-    }
-
-    public void setPortfolioValue(double portfolioValue) {
-        this.portfolioValue = portfolioValue;
-    }
 }

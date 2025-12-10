@@ -12,32 +12,8 @@ public class TotalValueOnDate {
     private static Map<MyDate, String> results = new HashMap<>();
 
     public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
-            SimulatorUI sim = new SimulatorUI();
-
             try {
-                if (date == null)
-                    throw new IllegalArgumentException("Invalid date");
-
-                if (!date.toString().contains("-"))
-                    throw new IllegalArgumentException("Invalid date");
-
-                String[] split = date.toString().split("-");
-
-                if (split.length != 3)
-                    throw new IllegalArgumentException("Invalid date");
-
-                int year;
-                int month;
-                int day;
-
-                if (sim.checkIfPositiveInteger(split[0], split[1], split[2])) {
-                    year = Integer.parseInt(split[0]);
-                    month = Integer.parseInt(split[1]);
-                    day = Integer.parseInt(split[2]);
-                }else
-                    throw new IllegalArgumentException("Invalid date");
-
-                if (year < 2020 || year > 2025 || month < 1 || month > 12 || day < 1 || day > 31)
+                if (!date.isValidDate(date))
                     throw new IllegalArgumentException("Invalid date");
 
             } catch (IllegalArgumentException e) {
@@ -53,7 +29,7 @@ public class TotalValueOnDate {
                 results.put(date, result);
                 return result;
             }else {
-                String result = "Invalid date! Please try again";
+                String result = "No price data on that date. Try again";
                 return result;
             }
         }

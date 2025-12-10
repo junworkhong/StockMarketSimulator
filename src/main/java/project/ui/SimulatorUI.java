@@ -1,10 +1,7 @@
 package project.ui;
 
 import com.bethecoder.ascii_table.ASCIITable;
-import project.common.DateResultMap;
-import project.common.MyDate;
-import project.common.Portfolio;
-import project.common.StockETF;
+import project.common.*;
 import project.data.StockETFReader;
 import project.processor.*;
 
@@ -76,15 +73,15 @@ public class SimulatorUI {
 
         while (on) {
             try {
-                String input = sc.nextLine();
+                String input = sc.nextLine().trim();
                 if (input.equals(" ") || input.isEmpty() || !input.trim().matches("\\d*\\.?\\d+"))
-                    throw new IllegalArgumentException("Please enter a valid amount");
+                    throw new IllegalArgumentException("Please enter a valid amount\n");
 
                 initialInvestment = Double.parseDouble(input.trim());
                 if (initialInvestment <= 0 || initialInvestment > 10000)
-                    throw new IllegalArgumentException("Please enter a valid amount");
+                    throw new IllegalArgumentException("Please enter a valid amount\n");
 
-                System.out.println("List the percentages of your initial $" + initialInvestment + "0 that you'd like to allocate for each stock. You can enter 0, but please use whole numbers!");
+                System.out.println("List the percentages of your initial $" + initialInvestment + "0 that you'd like to allocate for each stock. You can enter 0, but please use whole numbers!\n");
 //                break;
                 on = false;
             } catch (IllegalArgumentException e) {
@@ -106,17 +103,20 @@ public class SimulatorUI {
                     try {
                         System.out.println(entry.getKey() + " Stock Price on 2020-01-02: $" + entry.getValue().getPriceMap().get(date).getClose() +
                                 "\nHow much would you like to allocate to this stock/ETF? ");
-                        String input = sc.nextLine();
+                        String input = sc.nextLine().trim();
                         int amount = Integer.parseInt(input);
 
                         if (amount > 100 || amount < 0) {
-                            throw new IllegalArgumentException("Amount must be between 0 and 100");
+                            throw new IllegalArgumentException("Amount must be between 0 and 100\n");
                         }
 
                         if (amount > percentage)
-                            throw new IllegalArgumentException("That is greater than the remaining amount! Please try again");
+                            throw new IllegalArgumentException("That is greater than the remaining amount! Please try again\n");
 
-                        allocations.put(entry.getKey(), amount);
+                        if (amount == 0);
+                        else
+                            allocations.put(entry.getKey(), amount);
+
                         count.add(amount);
                         percentage = percentage - amount;
                         System.out.println("You have " + percentage + "% of your initial investment remaining.\n");
@@ -135,7 +135,7 @@ public class SimulatorUI {
                 System.exit(0);
             }
 
-            System.out.println("All allocations complete. Now you will create your own trading pattern!");
+            System.out.println("All allocations complete. Now you will create your own trading pattern!\n");
             int stopLoss = 0;
             int risk = 0;
             int target = 0;
@@ -145,13 +145,13 @@ public class SimulatorUI {
             while (on) {
                 try {
                     System.out.println("Please enter your stop loss percentage as an integer (if current buy price falls below this, sell all shares): ");
-                    String input = sc.nextLine();
+                    String input = sc.nextLine().trim();
                     if (!checkIfPositiveInteger(input))
-                        throw new IllegalArgumentException("That is not a positive integer");
+                        throw new IllegalArgumentException("That is not a positive integer\n");
 
                     stopLoss = Integer.parseInt(input);
                     if (stopLoss > 100)
-                        throw new IllegalArgumentException("Please enter a valid amount");
+                        throw new IllegalArgumentException("Please enter a valid amount\n");
 
                     on = false;
                 } catch (IllegalArgumentException e) {
@@ -165,13 +165,13 @@ public class SimulatorUI {
             while (on) {
                 try {
                     System.out.println("Please enter your risk percentage as an integer (percentage of your remaining $" + remaining + " you'd like to use to buy new shares): ");
-                    String input = sc.nextLine();
+                    String input = sc.nextLine().trim();
                     if (!checkIfPositiveInteger(input))
-                        throw new IllegalArgumentException("That is not a positive integer");
+                        throw new IllegalArgumentException("That is not a positive integer\n");
 
                     risk = Integer.parseInt(input);
                     if (risk > 100)
-                        throw new IllegalArgumentException("Please enter a valid amount");
+                        throw new IllegalArgumentException("Please enter a valid amount\n");
 
                     on = false;
                 } catch (IllegalArgumentException e) {
@@ -183,13 +183,13 @@ public class SimulatorUI {
             while (on) {
                 try {
                     System.out.println("Please enter your target percentage as an integer (if current buy price reaches this percent of your original buy price, sell all shares): ");
-                    String input = sc.nextLine();
+                    String input = sc.nextLine().trim();
                     if (!checkIfPositiveInteger(input))
-                        throw new IllegalArgumentException("That is not a positive integer");
+                        throw new IllegalArgumentException("That is not a positive integer\n");
 
                     target = Integer.parseInt(input);
                     if (target > 100)
-                        throw new IllegalArgumentException("Please enter a valid amount");
+                        throw new IllegalArgumentException("Please enter a valid amount\n");
                     on = false;
                 } catch (IllegalArgumentException e) {
                     System.out.println("Error: " + e.getMessage());
@@ -200,13 +200,13 @@ public class SimulatorUI {
             while (on) {
                 try {
                     System.out.println("Please enter your buy threshold percentage as an integer (if current buy price passes this percent, then you buy shares) : ");
-                    String input = sc.nextLine();
+                    String input = sc.nextLine().trim();
                     if (!checkIfInteger(input))
-                        throw new IllegalArgumentException("That is not an integer");
+                        throw new IllegalArgumentException("That is not an integer\n");
 
                     thresholdPercent = Integer.parseInt(input);
                     if (thresholdPercent > 100)
-                        throw new IllegalArgumentException("Please enter a valid amount");
+                        throw new IllegalArgumentException("Please enter a valid amount\n");
                     on = false;
                 } catch (IllegalArgumentException e) {
                     System.out.println("Error: " + e.getMessage());
@@ -258,26 +258,25 @@ public class SimulatorUI {
 
             on = true;
 
-            String input;
-
             while (on) {
                 ASCIITable.getInstance().printTable(menuHeader, menuData, ASCIITable.ALIGN_CENTER);
                 System.out.println("What would you like to view? Please enter a number from 0 to 6: ");
 
-                input = sc.nextLine();
+
+                int option;
+                String input = "";
+
                 boolean on2 = true;
                 while (on2) {
-                    try {
-                        if (!checkIfPositiveInteger(input))
-                            throw new IllegalArgumentException("Please try again");
-                        int option = Integer.parseInt(input);
-                        if (option < 0 || option > 6)
-                            throw new IllegalArgumentException("Please enter a number from 0 to 6");
-                        on2 = false;
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
+                    input = sc.nextLine().trim();
+                    if (!checkIfPositiveInteger(input)) {
+                        System.out.println("Please try again!\n");
+                    }else if (checkIfPositiveInteger(input) && (Integer.parseInt(input) < 0 || Integer.parseInt(input) > 6)) {
+                        System.out.println("Please enter a number from 0 to 6!\n");
+                    }else
+                        break;
                 }
+
 
             /*
             Operation 1: Calculate total value of portfolio on selected date (Jun)
@@ -287,19 +286,20 @@ Operation 4: Different trading patterns and reporting total return (Eric + a lit
 Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
 
              */
-                int option = Integer.parseInt(input);
+                option = Integer.parseInt(input);
                 switch (option) {
                     case 0:
                         System.out.println("Goodbye!");
                         on = false;
+                        break;
                     case 1:
                         operationOne(userPortfolio.getDateResultMap().getDateResults());
                         break;
                     case 2:
-                        operationTwo();
+                        operationTwo(userPortfolio);
                         break;
                     case 3:
-                        operationThree();
+                        operationThree(userPortfolio);
                         break;
                     case 4:
                         operationFour(userPortfolio);
@@ -346,24 +346,89 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
         boolean on = true;
         TotalValueOnDate total =  new TotalValueOnDate();
         while (on) {
-            System.out.println("\nPlease enter a date in the format yyyy-mm-dd starting from 2020-01-03 to 2025-11-14 or enter 0 to return to menu");
+            System.out.println("\nPlease enter a date in the format yyyy-mm-dd starting from 2020-01-02 to 2025-11-14 or enter 0 to return to menu");
             Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine();
+            String input = sc.nextLine().trim();
 
-            if (checkIfInteger(input) && Integer.parseInt(input) == 0)
+            if (checkIfInteger(input) && Integer.parseInt(input) == 0) {
                 on = false;
-            else {
-                MyDate myDate = new MyDate(input);
+                break;
+            }
+            MyDate myDate = new MyDate(input);
+
+            if (!myDate.isValidDate(myDate)) {
+                System.out.println("Invalid date. Try again\n");
+            }
+            else{
                 System.out.println(total.calculateTotalValueOnDate(myDate, map));
             }
         }
     }
 
-    public void operationTwo() {
-        returnToMenu();
+    public void operationTwo(Portfolio portfolio) {
+        boolean on = true;
+        CalculatePerStockStats calc = new CalculatePerStockStats();
+        System.out.println("\nHere are the stocks/ETFs in your portfolio: " + portfolio.getStockList().toString());
+        while (on) {
+            System.out.println("Please enter a stock name or press 0 to return to menu: ");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine().trim().toLowerCase();
+
+            if (checkIfInteger(input) && Integer.parseInt(input) == 0) {
+                on = false;
+                break;
+            }
+
+            boolean on2 = true;
+            while (on2) {
+                if (!portfolio.getStockList().contains(input)) {
+                    System.out.println("Enter a stock/ETF you own.");
+                    input = sc.nextLine().trim().toLowerCase();
+                }else
+                    break;
+            }
+
+            System.out.println("Please enter a date in the format yyyy-mm-dd starting from 2020-01-02 to 2025-11-14 or press 0 to return to menu");
+            String input2 = sc.nextLine().trim();
+            MyDate date = new MyDate(input2);
+
+            if (checkIfInteger(input2) && Integer.parseInt(input2) == 0) {
+                on = false;
+                break;
+            }
+
+            on2 = true;
+            while (on2) {
+                if (!date.isValidDate(date)) {
+                    System.out.println("Please enter a valid date");
+                    input2 = sc.nextLine().trim();
+                }else
+                    break;
+            }
+            calc.execute(portfolio, input, date);
+
+            for (Map.Entry<String, List<Double>> entry : portfolio.getPerStockETFStats().entrySet()) {
+                System.out.println(entry.getKey() + ":\nValue : $" + entry.getValue().get(0) + "\nProfit/Loss: $" + entry.getValue().get(1) + "\nProfit/Loss Percentage: " + entry.getValue().get(2) + "%");
+            }
+        }
     }
 
-    public void operationThree() {
+    public void operationThree(Portfolio portfolio) {
+        CompareWithSP500 sp500 = new CompareWithSP500();
+        SAndPIndex sp = new SAndPIndex("S&P");
+        MyDate startDate = new MyDate("2020-01-02");
+        MyDate endDate = new MyDate("2025-11-13");
+
+        try {
+            sp500.execute(portfolio, startDate, endDate);
+        }catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        System.out.println("S&P Return Percent over the same time period: " + portfolio.getSPReturn());
+        System.out.println("Your portfolio return percent over the same time period: " + portfolio.getTotalReturnPercentage());
+        System.out.println("Your portfolio return percent compared to the S&P 500: " + portfolio.getSPReturnOverUnder());
+
         returnToMenu();
     }
 
@@ -416,9 +481,9 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
     public void returnToMenu() {
         boolean on = true;
         while (on) {
-            System.out.println("Enter 0 to return: ");
+            System.out.println("\nEnter 0 to return: ");
             Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine();
+            String input = sc.nextLine().trim();
             if (checkIfInteger(input) && Integer.parseInt(input) == 0) {
                 on = false;
             }

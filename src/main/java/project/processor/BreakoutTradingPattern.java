@@ -113,7 +113,7 @@ public class BreakoutTradingPattern implements TradingStrategy {
         System.out.println("Final Total Portfolio Value: $" + finalTotal);
 //        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
         System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
-        System.out.println("Total Profit/Loss: $" + (finalCash - portfolio.getInitialInvestment()));
+        System.out.println("Total Profit/Loss: $" + (finalTotal - portfolio.getInitialInvestment()));
 //        System.out.println("\nFinal Shares: ");
 //
 //        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {

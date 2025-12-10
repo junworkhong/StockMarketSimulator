@@ -1,5 +1,7 @@
 package project.common;
 
+import project.ui.SimulatorUI;
+
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -38,6 +40,33 @@ public class MyDate implements Comparable<MyDate> {
             return 1;
         else
             return -1;
+    }
+
+    public boolean isValidDate (MyDate date) {
+        SimulatorUI sim =  new SimulatorUI();
+        if (!date.toString().contains("-"))
+            return false;
+
+        String[] split = date.toString().split("-");
+
+        if (split.length != 3)
+            return false;
+
+        int year;
+        int month;
+        int day;
+
+        if (sim.checkIfPositiveInteger(split[0], split[1], split[2])) {
+            year = Integer.parseInt(split[0]);
+            month = Integer.parseInt(split[1]);
+            day = Integer.parseInt(split[2]);
+        }else
+            return false;
+
+        if (year < 2020 || year > 2025 || month < 1 || month > 12 || day < 1 || day > 31)
+            return false;
+
+        return true;
     }
 
     @Override

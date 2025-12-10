@@ -60,6 +60,9 @@ public class TradingPattern implements TradingStrategy{
         MyDate firstDay = dates.getDateList().get(0);
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
+            if (ticker == null)
+                continue;
+
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
             double day1Price = stock.getPriceMap().get(firstDay).getClose();
 
@@ -78,7 +81,13 @@ public class TradingPattern implements TradingStrategy{
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
         for (MyDate date : dates.getDateList()) {
+            if (date == null)
+                continue;
+
             for (Map.Entry<String, StockETF> entry : userStocks.entrySet()) {
+                if (entry == null)
+                    continue;
+
                 String tickerName = entry.getKey();
                 StockETF stock = entry.getValue();
 
@@ -146,7 +155,7 @@ public class TradingPattern implements TradingStrategy{
         portfolio.setFinalSharesValue(finalSharesValue);
         portfolio.setFinalTotal(finalTotal);
         portfolio.setTotalReturnPercentage((finalTotal) / portfolio.getInitialInvestment() * 100.0);
-        portfolio.setTotalProfit(portfolio.getBudget() - portfolio.getInitialInvestment());
+        portfolio.setTotalProfit(finalTotal - portfolio.getInitialInvestment());
 
 //        System.out.println("==== FINAL RESULTS ====");
 ////        System.out.println("Final Cash: " + finalCash);
