@@ -14,8 +14,6 @@ import project.data.StockETFReader;
 
 import java.util.*;
 
-import static project.processor.SortBestWorstPerformers.sortBestToWorst;
-import static project.processor.TotalValueOnDate.calculateTotalValueOnDate;
 
 public class ExampleTradingPattern {
 //    private static final boolean DEBUG = true;
@@ -171,7 +169,7 @@ public class ExampleTradingPattern {
             }
             double currTotal = currCash + currSharesValue;
             double currReturnPercent = (currTotal / dummy.getInitialInvestment() * 100.0);
-            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
+            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, dummy.getShares());
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
@@ -278,24 +276,24 @@ public class ExampleTradingPattern {
     }
 
     public static void main(String[] args) {
-        UserTradingPattern();
-//        RunBreakoutTradingPattern(dummy);
-//        RunMomentumTradingPattern(dummy);
-//        DateResultMap newMap = dummy.getDateResultMap();
-//        System.out.println(dummy.getDateResultMap().getDateResults());
-//        dummy.getDateResultMap().dateResultOutput();
-
-        System.out.println();
-        Portfolio dummy2 = initializeDummyPortfolio();
-        BreakoutTradingPattern.RunTradingPattern(dummy2);
-        System.out.println();
-        Portfolio dummy3 = initializeDummyPortfolio();
-        MomentumTradingPattern.RunTradingPattern(dummy3);
-
-        MyDate date = new MyDate("2020-11-17");
-        System.out.println();
-        System.out.println(calculateTotalValueOnDate(date, dummy.getDateResultMap().getDateResults()));
-        System.out.println();
-        sortBestToWorst(dummy);
-    }
-}
+//        UserTradingPattern();
+////        RunBreakoutTradingPattern(dummy);
+////        RunMomentumTradingPattern(dummy);
+////        DateResultMap newMap = dummy.getDateResultMap();
+////        System.out.println(dummy.getDateResultMap().getDateResults());
+////        dummy.getDateResultMap().dateResultOutput();
+//
+//        System.out.println();
+//        Portfolio dummy2 = initializeDummyPortfolio();
+//        BreakoutTradingPattern.RunTradingPattern(dummy2);
+//        System.out.println();
+//        Portfolio dummy3 = initializeDummyPortfolio();
+//        MomentumTradingPattern.RunTradingPattern(dummy3);
+//
+//        MyDate date = new MyDate("2020-11-17");
+//        System.out.println();
+//        System.out.println(calculateTotalValueOnDate(date, dummy.getDateResultMap().getDateResults()));
+//        System.out.println();
+//        sortBestToWorst(dummy);
+//    }
+}}

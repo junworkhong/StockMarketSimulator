@@ -1,8 +1,13 @@
 package project.common;
 
+import project.processor.TradingPattern;
+import project.processor.TradingStrategy;
+
 import java.util.*;
 
 public class Portfolio {
+    private TradingStrategy strategy;
+
     private double Budget = 10000.00;
     private final double InitialInvestment;
     private final Map<String, Integer> Allocations;
@@ -19,7 +24,6 @@ public class Portfolio {
     private final Set<String> stockList = new TreeSet<>();
 
 //    Operation 1 variables
-    private double portfolioValue;
     private double totalProfitLoss;
     private double totalProfitLossPercent;
 
@@ -31,13 +35,13 @@ public class Portfolio {
     private double SPReturnOverUnder;
 
 //    Operation 4 variables
-    private int totalTrades;
-    private int winningTrades;
-    private int losingTrades;
-    private double winRate;
-    private String biggestWinner;
-    private String biggestLoser;
-    private double strategyReturn;
+    private double thresholdPercentage;
+    private double remainingInitial;
+
+    private double finalSharesValue;
+    private double finalTotal;
+    private double totalReturnPercentage;
+    private double totalProfit;
 
     public Portfolio(double initialInvestment,
                      Map<String, Integer> Allocations,
@@ -61,6 +65,29 @@ public class Portfolio {
         for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
             stockList.add(entry.getKey());
         }
+    }
+
+    public Portfolio copy() {
+        return new Portfolio(this.InitialInvestment,
+                this.Allocations,
+                this.StopLossPercentage,
+                this.RiskPercentage,
+                this.TargetPercentage,
+                this.ThresholdPrice,
+                this.UserStockETFMap,
+                this.shares,
+                this.dateResultMap);
+    }
+
+    public void setStrategy(TradingStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void execute(Portfolio portfolio) {
+        if (this.strategy == null)
+            this.strategy = new TradingPattern();
+
+        strategy.RunTradingPattern(portfolio);
     }
 
 //    Getters and setters for calculations
@@ -153,61 +180,54 @@ public class Portfolio {
 
 //    Getters and setters for results
 
-    public double getStrategyReturn() {
-        return strategyReturn;
+    public double getRemainingInitial() {
+        return remainingInitial;
     }
 
-    public void setStrategyReturn(double strategyReturn) {
-        this.strategyReturn = strategyReturn;
+    public void setRemainingInitial(double remainingBudget) {
+        this.remainingInitial = remainingBudget;
     }
 
-    public String getBiggestLoser() {
-        return biggestLoser;
+    public double getThresholdPercentage() {
+        return thresholdPercentage;
     }
 
-    public void setBiggestLoser(String biggestLoser) {
-        this.biggestLoser = biggestLoser;
+    public void setThresholdPercentage(double thresholdPercentage) {
+        this.thresholdPercentage = thresholdPercentage;
     }
 
-    public String getBiggestWinner() {
-        return biggestWinner;
+    public double getFinalSharesValue() {
+        return finalSharesValue;
     }
 
-    public void setBiggestWinner(String biggestWinner) {
-        this.biggestWinner = biggestWinner;
+    public void setFinalSharesValue(double finalSharesValue) {
+        this.finalSharesValue = finalSharesValue;
     }
 
-    public double getWinRate() {
-        return winRate;
+    public double getFinalTotal() {
+        return finalTotal;
     }
 
-    public void setWinRate(double winRate) {
-        this.winRate = winRate;
+    public void setFinalTotal(double finalTotal) {
+        this.finalTotal = finalTotal;
     }
 
-    public int getLosingTrades() {
-        return losingTrades;
+    public double getTotalReturnPercentage() {
+        return totalReturnPercentage;
     }
 
-    public void setLosingTrades(int losingTrades) {
-        this.losingTrades = losingTrades;
+    public void setTotalReturnPercentage(double totalReturnPercentage) {
+        this.totalReturnPercentage = totalReturnPercentage;
     }
 
-    public int getWinningTrades() {
-        return winningTrades;
+    public double getTotalProfit() {
+        return totalProfit;
     }
 
-    public void setWinningTrades(int winningTrades) {
-        this.winningTrades = winningTrades;
+    public void setTotalProfit(double totalProfit) {
+        this.totalProfit = totalProfit;
     }
 
-    public int getTotalTrades() {
-        return totalTrades;
-    }
-
-    public void setTotalTrades(int totalTrades) {
-        this.totalTrades = totalTrades;
-    }
 
     public double getSPReturnOverUnder() {
         return SPReturnOverUnder;
@@ -249,11 +269,4 @@ public class Portfolio {
         this.totalProfitLoss = totalProfitLoss;
     }
 
-    public double getPortfolioValue() {
-        return portfolioValue;
-    }
-
-    public void setPortfolioValue(double portfolioValue) {
-        this.portfolioValue = portfolioValue;
-    }
 }

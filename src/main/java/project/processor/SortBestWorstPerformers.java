@@ -9,7 +9,7 @@ import java.util.*;
 import static java.util.Arrays.stream;
 
 public class SortBestWorstPerformers {
-    public static void sortBestToWorst(Portfolio portfolio) {
+    public void sortBestToWorst(Portfolio portfolio) {
 //        Map<String, StockETF> tempStockETFMap = portfolio.getUserStockETFMap();
         Map<String, Double> helperValueMap = new TreeMap<>();
 

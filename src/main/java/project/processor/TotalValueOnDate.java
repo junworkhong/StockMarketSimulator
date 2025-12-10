@@ -6,10 +6,20 @@ import project.common.MyDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import project.ui.SimulatorUI;
+
 public class TotalValueOnDate {
     private static Map<MyDate, String> results = new HashMap<>();
 
-    public static String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
+    public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
+            try {
+                if (!date.isValidDate(date))
+                    throw new IllegalArgumentException("Invalid date");
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+
         if (results.containsKey(date)) {
             return results.get(date);
         }
@@ -19,7 +29,7 @@ public class TotalValueOnDate {
                 results.put(date, result);
                 return result;
             }else {
-                String result = "Invalid date!";
+                String result = "No price data on that date. Try again";
                 return result;
             }
         }
