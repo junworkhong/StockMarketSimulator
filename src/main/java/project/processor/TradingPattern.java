@@ -10,91 +10,30 @@ public class TradingPattern implements TradingStrategy{
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
     private static final DateCounter dates = new DateCounter();
 
-//    private static double initialInvestment;
-//    private static Map<String, Integer> allocationMap;
-//    private static int stopLoss;
-//    private static int risk;
-//    private static int target;
-//    private static Map<String, Double> threshold;
-
-//    public Portfolio initializePortfolio(double initialInvestment,
-//                                         Map<String, Integer> allocations,
-//                                         int stopLoss,
-//                                         int Risk,
-//                                         int Target,
-//                                         Map<String, Double> Threshold) {
-//
-//        Map<String, StockETF> UserStockETFMap = new HashMap<>() {
-//            {
-//                for (Map.Entry<String, Integer> entry : allocations.entrySet()) {
-//                    if (entry != null && entry.getKey() != null && entry.getValue() != null)
-//                        put(entry.getKey(), stockETFs.get(entry.getKey()));
-//                }
-//            }
-//        };
-//
-//        Map<String, Double> shares = new HashMap<>() {
-//            {
-//                for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
-//                    if (entry != null && entry.getKey() != null)
-//                        put(entry.getKey(), 0.0);
-//                }
-//            }
-//        };
-//
-//        DateResultMap dateResultMap = new DateResultMap();
-//
-//        if (dateResultMap == null)
-//            throw new IllegalStateException("Problem with dateResultMap");
-//
-//        Portfolio userPortfolio = new Portfolio(
-//                initialInvestment,
-//                allocations,
-//                stopLoss,
-//                Risk,
-//                Target,
-//                Threshold,
-//                UserStockETFMap,
-//                shares,
-//                dateResultMap
-//        );
-//
-//        return userPortfolio;
-//    }
-
     public void RunTradingPattern(Portfolio portfolio){
-//        Portfolio portfolio = initializePortfolio();
-
         if (portfolio == null)
             throw new IllegalStateException("Invalid portfolio");
 
         double initial = portfolio.getInitialInvestment();
-
         portfolio.addBudget((-1)*initial);
-
         Map<String, StockETF> userStocks = portfolio.getUserStockETFMap();
 
         if (userStocks == null)
             throw new IllegalStateException("Stock/ETF csvs are invalid!");
-
         if (dates == null || dates.getDateList() == null)
             throw new IllegalStateException("Dates are invalid!");
 
         MyDate firstDay = dates.getDateList().get(0);
-
         if (firstDay == null)
             throw new IllegalStateException("First day is invalid!");
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
             if (ticker == null)
                 continue;
-
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
             if (stock == null)
                 continue;
-
             double day1Price = stock.getPriceMap().get(firstDay).getClose();
-
             if (portfolio.getAllocations() == null)
                 continue;
 
@@ -109,7 +48,6 @@ public class TradingPattern implements TradingStrategy{
 
             portfolio.addTotalBuyDollars(ticker, 0.0);
             portfolio.addTotalSellDollars(ticker, 0.0);
-
             portfolio.getThreshold().put(ticker, day1Price * portfolio.getThreshold().get(ticker) * 0.01);
         }
 
@@ -210,37 +148,7 @@ public class TradingPattern implements TradingStrategy{
 
         portfolio.setFinalSharesValue(finalSharesValue);
         portfolio.setFinalTotal(finalTotal);
-        portfolio.setTotalReturnPercentage((finalTotal) / portfolio.getInitialInvestment() * 100.0);
+        portfolio.setTotalReturnPercentage((finalTotal / portfolio.getInitialInvestment()) * 100.0);
         portfolio.setTotalProfit(finalTotal - portfolio.getInitialInvestment());
-
-//        System.out.println("==== FINAL RESULTS ====");
-////        System.out.println("Final Cash: " + finalCash);
-//        System.out.println("Final Shares Value: " + finalSharesValue);
-//        System.out.println("Final Total Portfolio Value: " + finalTotal);
-//        System.out.println("Initial Investment: " + userPortfolio.getInitialInvestment());
-//        System.out.println("Total Return %: " + (finalTotal / userPortfolio.getInitialInvestment() * 100.0));
-//
-//        System.out.println("Final Budget: " + userPortfolio.getBudget());
-//        System.out.println("Final Shares Map: " + userPortfolio.getShares());
     }
-
-//    public void setAllocationMap(Map<String, Integer> allocationMap) {
-//        TradingPattern.allocationMap = allocationMap;
-//    }
-//
-//    public void setStopLoss(int stopLoss) {
-//        TradingPattern.stopLoss = stopLoss;
-//    }
-//
-//    public void setRisk(int risk) {
-//        TradingPattern.risk = risk;
-//    }
-//
-//    public void setTarget(int target) {
-//        TradingPattern.target = target;
-//    }
-//
-//    public void setThreshold(Map<String, Double> threshold) {
-//        TradingPattern.threshold = threshold;
-//    }
 }

@@ -46,7 +46,12 @@ public class DateResultMap {
                                                     double currTotalValue,
                                                     double currReturnPercent,
                                                     Map<String, Double> shareMap) {
-        DateResults myResults = new DateResults(initInvestment, currCash, currSharesValue, currTotalValue, currReturnPercent,  shareMap);
+        DateResults myResults = new DateResults(initInvestment,
+                currCash,
+                currSharesValue,
+                currTotalValue,
+                currReturnPercent,
+                shareMap);
         map.put(todayDate, myResults);
     }
 
