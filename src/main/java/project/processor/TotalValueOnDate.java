@@ -12,13 +12,15 @@ public class TotalValueOnDate {
     private static Map<MyDate, String> results = new HashMap<>();
 
     public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
-            try {
-                if (!date.isValidDate(date))
-                    throw new IllegalArgumentException("Invalid date");
+        if (results == null || date == null || map == null)
+            throw new IllegalStateException("Results or dates are invalid");
 
-            } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+        try {
+            if (!date.isValidDate(date))
+                throw new IllegalArgumentException("Invalid date");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
         if (results.containsKey(date)) {
             return results.get(date);
@@ -33,9 +35,5 @@ public class TotalValueOnDate {
                 return result;
             }
         }
-//        if (map.containsKey(date)){
-//            System.out.println("Total Value On Date: " + date + map.get(date));
-//        }else
-//            System.out.println("Invalid date!");
     }
 }

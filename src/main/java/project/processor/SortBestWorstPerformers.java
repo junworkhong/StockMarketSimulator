@@ -1,5 +1,6 @@
 package project.processor;
 
+import project.common.MyDate;
 import project.common.Portfolio;
 import project.common.StockETF;
 
@@ -10,19 +11,37 @@ import static java.util.Arrays.stream;
 
 public class SortBestWorstPerformers {
     public void sortBestToWorst(Portfolio portfolio) {
-//        Map<String, StockETF> tempStockETFMap = portfolio.getUserStockETFMap();
         Map<String, Double> helperValueMap = new TreeMap<>();
 
+        if (portfolio == null
+                || portfolio.getStockList() == null
+                || portfolio.getStockList().isEmpty()
+                || portfolio.getUserStockETFMap() == null)
+            throw new IllegalStateException("Portfolio has a bug");
+
         for (String ticker : portfolio.getStockList()) {
-            List<Double> values = new ArrayList<>();
-            values.add(portfolio.getBuyPrice().get(ticker));
-            values.add(portfolio.getEndPrice().get(ticker));
-            values.add(portfolio.getShares().get(ticker));
-            double profit = (values.get(1) - values.get(0)) * values.get(2);
-            double profitPercent = ((values.get(1) / values.get(0)) - 1) * 100;
-            values.add(profit);
-            values.add(profitPercent);
-            helperValueMap.put(ticker, values.get(4));
+            if (ticker == null || portfolio.getTotalSellDollars() == null || portfolio.getTotalBuyDollars() == null)
+                continue;
+
+            double profit = (portfolio.getTotalSellDollars().get(ticker) - portfolio.getTotalBuyDollars().get(ticker));
+            MyDate date = new MyDate("2025-11-14");
+
+            StockETF tempStock = portfolio.getUserStockETFMap().get(ticker);
+
+            if (tempStock == null)
+                continue;
+
+            double lastClose = tempStock.getPriceMap().get(date).getClose();
+            double unrealized = portfolio.getShares().get(ticker) * lastClose;
+            double total = profit + unrealized;
+
+            double profitPercent = 0.0;
+            if (portfolio.getTotalBuyDollars().get(ticker) > 0) {
+                double initialAllocation = portfolio.getInitialShares().get(ticker) * portfolio.getDayOnePrice().get(ticker);
+                profitPercent = (total / initialAllocation) * 100.0;
+            }
+
+            helperValueMap.put(ticker, profitPercent);
         }
 
         List<Map.Entry<String, Double>> entryList = new ArrayList<>(helperValueMap.entrySet());
@@ -31,12 +50,16 @@ public class SortBestWorstPerformers {
 
         Map<String, Double> stockList = new LinkedHashMap<>();
         for (Map.Entry<String, Double> entry : entryList) {
+            if (entry == null)
+                continue;
             stockList.put(entry.getKey(), entry.getValue());
         }
 
         DecimalFormat numberFormat = new DecimalFormat("#.00");
 
         for (Map.Entry<String, Double> entry : stockList.entrySet()) {
+            if (entry == null)
+                continue;
             System.out.println(entry.getKey() + " : " + numberFormat.format(entry.getValue()) + "%");
         }
     }

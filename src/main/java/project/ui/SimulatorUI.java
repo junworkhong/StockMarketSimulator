@@ -37,6 +37,9 @@ public class SimulatorUI {
         StockETFReader reader = StockETFReader.getInstance();
         Map<String, StockETF> stockETFs = reader.readStockETFs();
 
+        if (stockETFs == null)
+            throw new IllegalStateException("Stock/ETFs are null!");
+
         List<String[]> myList = new ArrayList<>();
         List<String> helperList = new ArrayList<>();;
         for (Map.Entry<String, StockETF> entry : stockETFs.entrySet()) {
@@ -98,6 +101,9 @@ public class SimulatorUI {
             for (Map.Entry<String, StockETF> entry : stockETFs.entrySet()) {
                 on = true;
                 while (on) {
+                    if (entry == null)
+                        continue;
+
                     if (percentage == 0)
                         break;
                     try {
@@ -218,7 +224,12 @@ public class SimulatorUI {
             Map<String, Double> shares = new HashMap<>();
             DateResultMap dateResultMap = new DateResultMap();
 
+            if (allocations == null)
+                throw new IllegalStateException("Allocations are null");
+
             for (Map.Entry<String, Integer> entry : allocations.entrySet()) {
+                if (entry == null)
+                    continue;
                 threshold.put(entry.getKey(), (double) thresholdPercent);
                 UserStockETFMap.put(entry.getKey(), stockETFs.get(entry.getKey()));
                 shares.put(entry.getKey(), 0.0);
@@ -236,7 +247,19 @@ public class SimulatorUI {
                     dateResultMap
             );
 
+            if (userPortfolio == null
+                    || userPortfolio.getAllocations() == null
+                    || userPortfolio.getThreshold() == null
+                    || userPortfolio.getUserStockETFMap() == null
+                    || userPortfolio.getShares() == null
+                    || userPortfolio.getDateResultMap() == null)
+                throw new IllegalStateException("UserPortfolio is null or contains null element");
+
             TradingPattern userTrade = new TradingPattern();
+
+            if (userTrade == null)
+                throw new IllegalStateException("TradingPattern is null");
+
             userPortfolio.setStrategy(userTrade);
             userPortfolio.execute(userPortfolio);
 
@@ -262,7 +285,6 @@ public class SimulatorUI {
                 ASCIITable.getInstance().printTable(menuHeader, menuData, ASCIITable.ALIGN_CENTER);
                 System.out.println("What would you like to view? Please enter a number from 0 to 6: ");
 
-
                 int option;
                 String input = "";
 
@@ -277,15 +299,6 @@ public class SimulatorUI {
                         break;
                 }
 
-
-            /*
-            Operation 1: Calculate total value of portfolio on selected date (Jun)
-Operation 2: Showing profit/loss percentage for a chosen stock/ETF (Eric)
-Operation 3: Comparing portfolio performance to S&P 500 Benchmark (Eric)
-Operation 4: Different trading patterns and reporting total return (Eric + a little by Jun)
-Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
-
-             */
                 option = Integer.parseInt(input);
                 switch (option) {
                     case 0:
@@ -381,7 +394,7 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
 
             boolean on2 = true;
             while (on2) {
-                if (!portfolio.getStockList().contains(input)) {
+                if (!portfolio.getStockList().contains(input.trim().toUpperCase())) {
                     System.out.println("Enter a stock/ETF you own.");
                     input = sc.nextLine().trim().toLowerCase();
                 }else
@@ -402,16 +415,30 @@ Operation 5: Sorting all stocks/ETFs by best and worst performing (Jun)
                 if (!date.isValidDate(date)) {
                     System.out.println("Please enter a valid date");
                     input2 = sc.nextLine().trim();
-                }else
+                }else {
+                    boolean on3 = true;
+                    while (on3) {
+                        try{
+                            calc.execute(portfolio, input, date);
+                            for (Map.Entry<String, List<Double>> entry : portfolio.getPerStockETFStats().entrySet()) {
+                                System.out.println(entry.getKey() + ":\nValue : $" + entry.getValue().get(0) + "\nProfit/Loss: $" + entry.getValue().get(1) + "\nProfit/Loss Percentage: " + entry.getValue().get(2) + "%");
+                            }
+                            break;
+                        }catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                        break;
+                    }
                     break;
+                }
             }
-            calc.execute(portfolio, input, date);
-
-            for (Map.Entry<String, List<Double>> entry : portfolio.getPerStockETFStats().entrySet()) {
-                System.out.println(entry.getKey() + ":\nValue : $" + entry.getValue().get(0) + "\nProfit/Loss: $" + entry.getValue().get(1) + "\nProfit/Loss Percentage: " + entry.getValue().get(2) + "%");
             }
-        }
     }
+
+//                if (portfolio.getPerStockETFStats() == null) {
+//                System.out.println("No data on that date!");
+//                break;
+//            }
 
     public void operationThree(Portfolio portfolio) {
         CompareWithSP500 sp500 = new CompareWithSP500();

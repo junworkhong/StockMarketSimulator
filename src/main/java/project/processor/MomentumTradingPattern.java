@@ -8,7 +8,14 @@ public class MomentumTradingPattern implements TradingStrategy{
     private static final DateCounter dates = new DateCounter();
 
     public void RunTradingPattern(Portfolio UserPortfolio) {
+        if (UserPortfolio == null || dates == null || dates.getDateList() == null) {
+            throw new IllegalStateException("UserPortfolio or date csv is null");
+        }
+
         Portfolio portfolio = UserPortfolio.copy();
+        if (portfolio == null)
+            throw new IllegalStateException("Issue with copy method in Portfolio class");
+
         double initial = portfolio.getInitialInvestment();
 
         portfolio.addBudget((-1)*initial);
@@ -16,25 +23,25 @@ public class MomentumTradingPattern implements TradingStrategy{
         Map<String, StockETF> userStocks = portfolio.getUserStockETFMap();
         MyDate firstDay = dates.getDateList().get(0);
 
-//        for (String ticker : portfolio.getUserStockETFMap().keySet()) {
-//            StockETF stock = portfolio.getUserStockETFMap().get(ticker);
-//            double day1Price = stock.getPriceMap().get(firstDay).getClose();
-//
-//            double allocationPercent = portfolio.getAllocations().get(ticker) * 0.01;
-//            double amountDollars = allocationPercent * initial;
-//            double sharesToBuy = amountDollars / day1Price;
-//
-//            portfolio.addShares(ticker, sharesToBuy);
-//            portfolio.addBuyPrice(ticker, day1Price);
-//        }
+        if (userStocks == null)
+            throw new IllegalStateException("Stock/ETF csvs are invalid!");
+
+        if (firstDay == null)
+            throw new IllegalStateException("First day is invalid!");
 
         double targetMultiplier = portfolio.getTarget() * 0.01;
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
         for (MyDate date : dates.getDateList()) {
+            if (date == null)
+                continue;
+
             int i = dates.getDateList().indexOf(date);
 
             for (Map.Entry<String, StockETF> entry : userStocks.entrySet()) {
+                if (entry == null || entry.getKey() == null || entry.getValue() == null)
+                    continue;
+
                 String tickerName = entry.getKey();
                 StockETF stock = entry.getValue();
 
@@ -60,11 +67,19 @@ public class MomentumTradingPattern implements TradingStrategy{
 
                 if (!date.equals(firstDay)) {
                     MyDate yesterday = dates.getDateList().get(i-1);
+                    if (yesterday == null)
+                        break;
+                    if (stock.getPriceMap() == null)
+                        throw new IllegalStateException("Stock/ETF csvs are invalid!");
                     yesterdayClose = stock.getPriceMap().get(yesterday).getClose();
                 }
 
                 if (i > 1) {
                     MyDate twoDaysAgo = dates.getDateList().get(i-2);
+                    if (twoDaysAgo == null)
+                        break;
+                    if (stock.getPriceMap() == null)
+                        throw new IllegalStateException("Stock/ETF csvs are invalid!");
                     twoDaysClose = stock.getPriceMap().get(twoDaysAgo).getClose();
                 }
 
@@ -74,7 +89,6 @@ public class MomentumTradingPattern implements TradingStrategy{
                 double calculation1 = (closePrice - yesterdayClose) / yesterdayClose;
                 double calculation2 = (yesterdayClose - twoDaysClose)  / twoDaysClose;
 
-//                && (i > 1 && calculation2 >= 0.01)
                 if (yesterdayClose > 0 && twoDaysClose > 0) {
                     momentumBuy = (closePrice > yesterdayClose && yesterdayClose > twoDaysClose);
                     momentumSell = (closePrice < yesterdayClose * 0.98);
@@ -83,7 +97,7 @@ public class MomentumTradingPattern implements TradingStrategy{
 
                 if (shares == 0) {
                     if (portfolio.getBudget() > risk && momentumBuy) {
-                        Double amountToBuy = risk/closePrice;
+                        double amountToBuy = risk/closePrice;
 
                         portfolio.addBuyPrice(tickerName, closePrice);
                         portfolio.addShares(tickerName, amountToBuy);
@@ -95,26 +109,22 @@ public class MomentumTradingPattern implements TradingStrategy{
                         portfolio.sellShares(tickerName);
                     }
                 }
-
-//                double currCash = portfolio.getBudget();
-//                double currSharesValue = 0.0;
-//                StockETF tempStock = portfolio.getUserStockETFMap().get(tickerName);
-//                double lastClose = tempStock.getPriceMap().get(date).getClose();
-//                double sh = portfolio.getShares().get(tickerName);
-//                double currTotal = currCash + currSharesValue;
-//                double currReturnPercent = (currTotal / portfolio.getInitialInvestment() * 100.0);
-//
-//                currSharesValue += sh * lastClose;
-//                DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
             }
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
+        if (lastDate == null)
+            throw new IllegalStateException("Issue with last date on csv");
+
         double finalCash = portfolio.getBudget();
         double finalSharesValue = 0.0;
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
+            if (ticker == null)
+                continue;
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
+            if (stock == null || stock.getPriceMap() == null)
+                continue;
             double lastClose = stock.getPriceMap().get(lastDate).getClose();
             double sh = portfolio.getShares().get(ticker);
             finalSharesValue += sh * lastClose;
@@ -128,14 +138,8 @@ public class MomentumTradingPattern implements TradingStrategy{
         System.out.println("Final Budget: $" + finalCash);
         System.out.println("Final Shares Value: $" + finalSharesValue);
         System.out.println("Final Total Portfolio Value: $" + finalTotal);
-//        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
         System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
         System.out.println("Total Profit/Loss: $" + (finalTotal - portfolio.getInitialInvestment()));
-//        System.out.println("\nFinal Shares Map: " + portfolio.getShares());
-//
-//        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
     }
     }
 

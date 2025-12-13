@@ -20,6 +20,10 @@ public class CalculatePerStockStats {
         ticker = ticker.toUpperCase();
 
         Map<String, StockETF> userMap = portfolio.getUserStockETFMap();
+
+        if (portfolio.getUserStockETFMap() == null)
+            throw new IllegalStateException("Try a new date");
+
         if (!userMap.containsKey(ticker)) {
             throw new IllegalArgumentException("Unknown ticker: " + ticker);
         }
