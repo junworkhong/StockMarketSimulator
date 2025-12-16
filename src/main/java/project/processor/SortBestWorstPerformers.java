@@ -13,14 +13,11 @@ public class SortBestWorstPerformers {
     public void sortBestToWorst(Portfolio portfolio) {
         Map<String, Double> helperValueMap = new TreeMap<>();
 
-        if (portfolio == null
-                || portfolio.getStockList() == null
-                || portfolio.getStockList().isEmpty()
-                || portfolio.getUserStockETFMap() == null)
+        if (portfolio == null || portfolio.getStockList() == null)
             throw new IllegalStateException("Portfolio has a bug");
 
         for (String ticker : portfolio.getStockList()) {
-            if (ticker == null || portfolio.getTotalSellDollars() == null || portfolio.getTotalBuyDollars() == null)
+            if (ticker == null)
                 continue;
 
             double profit = (portfolio.getTotalSellDollars().get(ticker) - portfolio.getTotalBuyDollars().get(ticker));

@@ -3,6 +3,8 @@ package project.processor;
 import project.common.*;
 import project.data.StockETFReader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BreakoutTradingPattern implements TradingStrategy {
@@ -26,23 +28,18 @@ public class BreakoutTradingPattern implements TradingStrategy {
 
         if (userStocks == null)
             throw new IllegalStateException("Stock/ETF csvs are invalid!");
-
         if (firstDay == null)
             throw new IllegalStateException("First day is invalid!");
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
             if (ticker == null)
                 continue;
-
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
             if (stock == null)
                 continue;
-
             double day1Price = stock.getPriceMap().get(firstDay).getClose();
-
-            if (portfolio.getAllocations() == null)
+            if (portfolio.getAllocations() == null || portfolio.getAllocations().get(stock.getTickerName()) == null)
                 continue;
-
             double allocationPercent = portfolio.getAllocations().get(ticker) * 0.01;
             double amountDollars = allocationPercent * initial;
             double sharesToBuy = amountDollars / day1Price;
@@ -54,8 +51,19 @@ public class BreakoutTradingPattern implements TradingStrategy {
         double targetMultiplier = portfolio.getTarget() * 0.01;
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
+        List<String> helperList = new ArrayList<>();
+        helperList.addAll(portfolio.getUserStockETFMap().keySet());
+
         for (MyDate date : dates.getDateList()) {
             if (date == null)
+                continue;
+
+            boolean hi = true;
+            for (String s : helperList) {
+                if (s == null || userStocks.get(s) == null || !userStocks.get(s).getPriceMap().containsKey(date) || userStocks.get(s).getPriceMap().get(date) == null)
+                    hi = false;
+            }
+            if (!hi)
                 continue;
 
             for (Map.Entry<String, StockETF> entry : userStocks.entrySet()) {
@@ -64,6 +72,9 @@ public class BreakoutTradingPattern implements TradingStrategy {
 
                 String tickerName = entry.getKey();
                 StockETF stock = entry.getValue();
+
+                if (stock.getPriceMap().get(date) == null || portfolio.getShares().get(tickerName) == null)
+                    continue;
 
                 double closePrice = stock.getPriceMap().get(date).getClose();
                 double shares = portfolio.getShares().get(tickerName);
