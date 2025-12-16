@@ -33,13 +33,20 @@ public class SortBestWorstPerformers {
 
             double lastClose = tempStock.getPriceMap().get(date).getClose();
             double unrealized = portfolio.getShares().get(ticker) * lastClose;
-            double total = profit + unrealized;
+//            double total = profit + unrealized;
+            double totalCost = portfolio.getTotalBuyDollars().get(ticker);
+            double currentValue = portfolio.getShares().get(ticker) * lastClose + portfolio.getTotalSellDollars().get(ticker);
 
             double profitPercent = 0.0;
-            if (portfolio.getTotalBuyDollars().get(ticker) > 0) {
-                double initialAllocation = portfolio.getInitialShares().get(ticker) * portfolio.getDayOnePrice().get(ticker);
-                profitPercent = (total / initialAllocation) * 100.0;
-            }
+
+            if (totalCost == 0)
+                profitPercent = 0.0;
+            else
+                profitPercent = ((currentValue - totalCost) / totalCost) * 100.0;
+//            if (portfolio.getTotalBuyDollars().get(ticker) > 0) {
+//                double initialAllocation = portfolio.getInitialShares().get(ticker) * portfolio.getDayOnePrice().get(ticker);
+//                profitPercent = (total / initialAllocation) * 100.0;
+//            }
 
             helperValueMap.put(ticker, profitPercent);
         }
