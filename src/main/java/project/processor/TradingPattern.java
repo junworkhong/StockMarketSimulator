@@ -11,6 +11,7 @@ public class TradingPattern implements TradingStrategy{
     private static final DateCounter dates = new DateCounter();
 
     public void RunTradingPattern(Portfolio portfolio){
+        DateResultMap.clearDateResult();
         if (portfolio == null)
             throw new IllegalStateException("Invalid portfolio");
 
