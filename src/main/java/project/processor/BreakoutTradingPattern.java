@@ -8,15 +8,14 @@ import java.util.Map;
 public class BreakoutTradingPattern implements TradingStrategy {
     private static final DateCounter dates = new DateCounter();
 
-//    private static Double initialInvestment;
-//    private static Map<String, Integer> allocationMap;
-//    private static int stopLoss;
-//    private static int risk;
-//    private static int target;
-//    private static Map<String, Integer> threshold;
-
     public void RunTradingPattern(Portfolio UserPortfolio) {
+        if (UserPortfolio == null || dates == null || dates.getDateList() == null) {
+            throw new IllegalStateException("UserPortfolio or date csv is null");
+        }
+
         Portfolio portfolio = UserPortfolio.copy();
+        if (portfolio == null)
+            throw new IllegalStateException("Issue with copy method in Portfolio class");
 
         double initial = portfolio.getInitialInvestment();
 
@@ -25,9 +24,24 @@ public class BreakoutTradingPattern implements TradingStrategy {
         Map<String, StockETF> userStocks = portfolio.getUserStockETFMap();
         MyDate firstDay = dates.getDateList().get(0);
 
+        if (userStocks == null)
+            throw new IllegalStateException("Stock/ETF csvs are invalid!");
+
+        if (firstDay == null)
+            throw new IllegalStateException("First day is invalid!");
+
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
+            if (ticker == null)
+                continue;
+
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
+            if (stock == null)
+                continue;
+
             double day1Price = stock.getPriceMap().get(firstDay).getClose();
+
+            if (portfolio.getAllocations() == null)
+                continue;
 
             double allocationPercent = portfolio.getAllocations().get(ticker) * 0.01;
             double amountDollars = allocationPercent * initial;
@@ -41,7 +55,13 @@ public class BreakoutTradingPattern implements TradingStrategy {
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
         for (MyDate date : dates.getDateList()) {
+            if (date == null)
+                continue;
+
             for (Map.Entry<String, StockETF> entry : userStocks.entrySet()) {
+                if (entry == null || entry.getKey() == null || entry.getValue() == null)
+                    continue;
+
                 String tickerName = entry.getKey();
                 StockETF stock = entry.getValue();
 
@@ -64,7 +84,7 @@ public class BreakoutTradingPattern implements TradingStrategy {
 
                 if (shares == 0) {
                     if (closePrice > thresholdPrice && (portfolio.getBudget() > risk)) {
-                        Double amountToBuy = risk/closePrice;
+                        double amountToBuy = risk/closePrice;
 
                         portfolio.addBuyPrice(tickerName, closePrice);
                         portfolio.addShares(tickerName, amountToBuy);
@@ -76,28 +96,22 @@ public class BreakoutTradingPattern implements TradingStrategy {
                         portfolio.sellShares(tickerName);
                     }
                 }
-
-//                double currCash = portfolio.getBudget();
-//                double currSharesValue = 0.0;
-//
-//                for (String ticker : portfolio.getUserStockETFMap().keySet()) {
-//                    StockETF tempStock = portfolio.getUserStockETFMap().get(ticker);
-//                    double lastClose = tempStock.getPriceMap().get(date).getClose();
-//                    double sh = portfolio.getShares().get(ticker);
-//                    currSharesValue += sh * lastClose;
-//                }
-//                double currTotal = currCash + currSharesValue;
-//                double currReturnPercent = (currTotal / portfolio.getInitialInvestment() * 100.0);
-//                DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent);
             }
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
+        if (lastDate == null)
+            throw new IllegalStateException("Issue with last date on csv");
+
         double finalCash = portfolio.getBudget();
         double finalSharesValue = 0.0;
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
+            if (ticker == null)
+                continue;
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
+            if (stock == null || stock.getPriceMap() == null)
+                continue;
             double lastClose = stock.getPriceMap().get(lastDate).getClose();
             double sh = portfolio.getShares().get(ticker);
             finalSharesValue += sh * lastClose;
@@ -111,14 +125,8 @@ public class BreakoutTradingPattern implements TradingStrategy {
         System.out.println("Final Budget: $" + finalCash);
         System.out.println("Final Shares Value: $" + finalSharesValue);
         System.out.println("Final Total Portfolio Value: $" + finalTotal);
-//        System.out.println("Initial Investment: " + portfolio.getInitialInvestment());
         System.out.println("Total Return Percentage: " + (finalTotal / portfolio.getInitialInvestment() * 100.0) + "%");
         System.out.println("Total Profit/Loss: $" + (finalTotal - portfolio.getInitialInvestment()));
-//        System.out.println("\nFinal Shares: ");
-//
-//        for (Map.Entry<String, Double> entry : portfolio.getShares().entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
     }
 
 //    public static void RunBreakoutTradingPattern(Portfolio portfolio) {

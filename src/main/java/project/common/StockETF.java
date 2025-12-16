@@ -45,7 +45,6 @@ public class StockETF extends Investment{
 
     @Override
     public String toString() {
-//        DecimalFormat df = new DecimalFormat("0.##########");
         return "Ticker Name: " + this.name + "\nType: " + this.securityType + "\nPrices: " + this.prices;
     }
 }

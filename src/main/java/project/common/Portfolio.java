@@ -19,9 +19,12 @@ public class Portfolio {
     private Map<String, Double> shares;
     private Map<String, Double> initialShares = new HashMap<>();
     private Map<String, Double> buyPrice = new HashMap<>();
+    private Map<String, Double> dayOnePrice = new HashMap<>();
     private Map<String, Double> endPrice = new HashMap<>();
     private DateResultMap dateResultMap;
     private final Set<String> stockList = new TreeSet<>();
+    private Map<String, Double> totalBuyDollars = new HashMap<>();
+    private Map<String, Double> totalSellDollars = new HashMap<>();
 
 //    Operation 1 variables
     private double totalProfitLoss;
@@ -166,6 +169,14 @@ public class Portfolio {
         this.endPrice.put(ticker, endPrice);
     }
 
+    public Map<String, Double> getDayOnePrice() {
+        return this.dayOnePrice;
+    }
+
+    public void addDayOnePrice(String ticker, double dayOnePrice) {
+        this.dayOnePrice.put(ticker, dayOnePrice);
+    }
+
     public DateResultMap getDateResultMap() {
         return this.dateResultMap;
     }
@@ -178,7 +189,23 @@ public class Portfolio {
         return this.initialShares;
     }
 
-//    Getters and setters for results
+    public Map<String, Double> getTotalBuyDollars() {
+        return totalBuyDollars;
+    }
+
+    public void addTotalBuyDollars(String ticker, double value) {
+        this.totalBuyDollars.put(ticker, value);
+    }
+
+    public Map<String, Double> getTotalSellDollars() {
+        return totalSellDollars;
+    }
+
+    public void addTotalSellDollars(String ticker, double value) {
+        this.totalSellDollars.put(ticker, value);
+    }
+
+    //    Getters and setters for results
 
     public double getRemainingInitial() {
         return remainingInitial;
