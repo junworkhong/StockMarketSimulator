@@ -2,6 +2,8 @@ package project.processor;
 
 import project.common.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MomentumTradingPattern implements TradingStrategy{
@@ -32,8 +34,19 @@ public class MomentumTradingPattern implements TradingStrategy{
         double targetMultiplier = portfolio.getTarget() * 0.01;
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
+        List<String> helperList = new ArrayList<>();
+        helperList.addAll(portfolio.getUserStockETFMap().keySet());
+
         for (MyDate date : dates.getDateList()) {
             if (date == null)
+                continue;
+
+            boolean hi = true;
+            for (String s : helperList) {
+                if (s == null || userStocks.get(s) == null || !userStocks.get(s).getPriceMap().containsKey(date) || userStocks.get(s).getPriceMap().get(date) == null)
+                    hi = false;
+            }
+            if (!hi)
                 continue;
 
             int i = dates.getDateList().indexOf(date);
@@ -56,10 +69,6 @@ public class MomentumTradingPattern implements TradingStrategy{
                         continue;
                 }
 
-                double buyPrice = portfolio.getBuyPrice().get(tickerName);
-                double target = targetMultiplier * buyPrice;
-                double stoploss = stoplossMultiplier * buyPrice;
-                double thresholdPrice = portfolio.getThreshold().get(tickerName);
                 double risk = portfolio.getRisk() * 0.01 * portfolio.getBudget();
 
                 double yesterdayClose = 0.0;
@@ -71,6 +80,8 @@ public class MomentumTradingPattern implements TradingStrategy{
                         break;
                     if (stock.getPriceMap() == null)
                         throw new IllegalStateException("Stock/ETF csvs are invalid!");
+                    if (stock.getPriceMap().get(yesterday) == null)
+                        break;
                     yesterdayClose = stock.getPriceMap().get(yesterday).getClose();
                 }
 
@@ -80,14 +91,13 @@ public class MomentumTradingPattern implements TradingStrategy{
                         break;
                     if (stock.getPriceMap() == null)
                         throw new IllegalStateException("Stock/ETF csvs are invalid!");
+                    if (stock.getPriceMap().get(twoDaysAgo) == null)
+                        break;
                     twoDaysClose = stock.getPriceMap().get(twoDaysAgo).getClose();
                 }
 
                 boolean momentumBuy = false;
                 boolean momentumSell = false;
-
-                double calculation1 = (closePrice - yesterdayClose) / yesterdayClose;
-                double calculation2 = (yesterdayClose - twoDaysClose)  / twoDaysClose;
 
                 if (yesterdayClose > 0 && twoDaysClose > 0) {
                     momentumBuy = (closePrice > yesterdayClose && yesterdayClose > twoDaysClose);

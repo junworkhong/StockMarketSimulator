@@ -22,7 +22,7 @@ public class Portfolio {
     private Map<String, Double> dayOnePrice = new HashMap<>();
     private Map<String, Double> endPrice = new HashMap<>();
     private DateResultMap dateResultMap;
-    private final Set<String> stockList = new TreeSet<>();
+    private Set<String> stockList = new TreeSet<>();
     private Map<String, Double> totalBuyDollars = new HashMap<>();
     private Map<String, Double> totalSellDollars = new HashMap<>();
 
@@ -65,9 +65,14 @@ public class Portfolio {
         this.shares = shares;
         this.dateResultMap = dateMap;
 
-        for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet()) {
-            stockList.add(entry.getKey());
-        }
+        if (this.UserStockETFMap != null) {
+            for (Map.Entry<String, StockETF> entry : UserStockETFMap.entrySet())
+                if (entry == null || entry.getKey() == null || entry.getValue() == null)
+                    continue;
+                else
+                    stockList.add(entry.getKey());
+        }else
+            stockList = null;
     }
 
     public Portfolio copy() {
@@ -136,7 +141,7 @@ public class Portfolio {
     }
 
     public void addShares(String ticker, Double shares) {
-        this.shares.put(ticker, this.shares.get(ticker) + shares);
+        this.shares.put(ticker, this.shares.getOrDefault((ticker) + shares, 0.0));
     }
 
     public void initializeShares(String ticker, Double shares) {

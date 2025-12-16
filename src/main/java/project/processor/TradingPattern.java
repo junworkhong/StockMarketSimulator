@@ -34,7 +34,7 @@ public class TradingPattern implements TradingStrategy{
             if (stock == null)
                 continue;
             double day1Price = stock.getPriceMap().get(firstDay).getClose();
-            if (portfolio.getAllocations() == null)
+            if (portfolio.getAllocations() == null || portfolio.getAllocations().get(stock.getTickerName()) == null)
                 continue;
 
             double allocationPercent = portfolio.getAllocations().get(ticker) * 0.01;
@@ -54,8 +54,19 @@ public class TradingPattern implements TradingStrategy{
         double targetMultiplier = portfolio.getTarget() * 0.01;
         double stoplossMultiplier = portfolio.getStopLoss() * 0.01;
 
+        List<String> helperList = new ArrayList<>();
+        helperList.addAll(portfolio.getUserStockETFMap().keySet());
+
         for (MyDate date : dates.getDateList()) {
             if (date == null)
+                continue;
+
+            boolean hi = true;
+            for (String s : helperList) {
+                if (s == null || userStocks.get(s) == null || !userStocks.get(s).getPriceMap().containsKey(date) || userStocks.get(s).getPriceMap().get(date) == null)
+                    hi = false;
+            }
+            if (!hi)
                 continue;
 
             for (Map.Entry<String, StockETF> entry : userStocks.entrySet()) {
@@ -64,6 +75,9 @@ public class TradingPattern implements TradingStrategy{
 
                 String tickerName = entry.getKey();
                 StockETF stock = entry.getValue();
+
+                if (stock.getPriceMap().get(date) == null || portfolio.getShares().get(tickerName) == null)
+                    continue;
 
                 double closePrice = stock.getPriceMap().get(date).getClose();
                 double shares = portfolio.getShares().get(tickerName);
@@ -138,7 +152,11 @@ public class TradingPattern implements TradingStrategy{
         double finalSharesValue = 0.0;
 
         for (String ticker : portfolio.getUserStockETFMap().keySet()) {
+            if (portfolio.getUserStockETFMap().get(ticker) == null)
+                continue;
             StockETF stock = portfolio.getUserStockETFMap().get(ticker);
+            if (stock == null || stock.getPriceMap() == null)
+                continue;
             double lastClose = stock.getPriceMap().get(lastDate).getClose();
             double sh = portfolio.getShares().get(ticker);
             finalSharesValue += sh * lastClose;
