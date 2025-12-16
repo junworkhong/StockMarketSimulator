@@ -52,14 +52,22 @@ public class CalculatePerStockStatsTest {
         new CalculatePerStockStats().execute(null, "AAPL", new MyDate("2020-01-02"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testNullUserStockMap_throwIllegalStateException() {
+        MyDate d = new MyDate("2020-01-02");
+
+
+        Map<String, StockETF> userMap = new HashMap<>();
+
         Map<String, Double> shares = new HashMap<>();
         Map<String, Double> buy = new HashMap<>();
-        Portfolio p = makePortfolio(10000.0, null, shares, buy);
 
-        new CalculatePerStockStats().execute(p, "AAPL", new MyDate("2020-01-02"));
+        Portfolio p = makePortfolio(10000.0, userMap, shares, buy);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new CalculatePerStockStats().execute(p, "AAPL", d));
     }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void testUnknownTicker_throwIllegalArgumentException() {

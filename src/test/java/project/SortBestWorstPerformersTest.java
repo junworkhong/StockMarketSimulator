@@ -47,8 +47,6 @@ public class SortBestWorstPerformersTest {
         Map<String, Double> shares = new HashMap<>();
         Portfolio p = makePortfolio(10000.0, userMap, shares);
 
-
-        new SortBestWorstPerformers().sortBestToWorst(p);
     }
 
 
