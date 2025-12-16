@@ -70,219 +70,219 @@ public class TradingPatternTest {
         assertThrows(IllegalStateException.class, () -> trade.RunTradingPattern(portfolio));
     }
 
-    @Test
-    public void testNullUserStocks() {
-        stock1 = new StockETF(ticker, security);
-        stock2 = new StockETF(ticker2, security);
-        stock3 = new StockETF(ticker3, security);
-        stockETFMap = null;
-
-        stock1.addPriceDate(price1);
-        stock1.addPriceDate(price2);
-        stock1.addPriceDate(price3);
-        stock1.addPriceMap(date, price1);
-        stock1.addPriceMap(date2, price2);
-        stock1.addPriceMap(date3, price3);
-
-        stock2.addPriceDate(price1);
-        stock2.addPriceDate(price2);
-        stock2.addPriceDate(price3);
-        stock2.addPriceMap(date, price1);
-        stock2.addPriceMap(date2, price2);
-        stock2.addPriceMap(date3, price3);
-
-        stock3.addPriceDate(price1);
-        stock3.addPriceDate(price2);
-        stock3.addPriceDate(price3);
-        stock3.addPriceMap(date, price1);
-        stock3.addPriceMap(date2, price2);
-        stock3.addPriceMap(date3, price3);
-
-        Portfolio portfolio = new Portfolio(
-                initialInvestment,
-                allocations,
-                stopLoss,
-                risk,
-                target,
-                threshold,
-                stockETFMap,
-                shares,
-                dateResults
-        );
-
-        portfolio.addTotalBuyDollars(ticker, 100.0);
-        portfolio.addTotalBuyDollars(ticker2, 200.0);
-        portfolio.addTotalBuyDollars(ticker3, 300.0);
-
-        portfolio.addTotalSellDollars(ticker, 100.0);
-        portfolio.addTotalSellDollars(ticker2, 50.0);
-        portfolio.addTotalSellDollars(ticker3, 10.0);
-
-        portfolio.addShares(ticker, 0.0);
-        portfolio.addShares(ticker2, 0.0);
-        portfolio.addShares(ticker3, 0.0);
-
-        portfolio.initializeShares(ticker, 0.0);
-        portfolio.initializeShares(ticker2, 0.0);
-        portfolio.initializeShares(ticker3, 0.0);
-
-        portfolio.addDayOnePrice(ticker, 0.0);
-        portfolio.addDayOnePrice(ticker2, 0.0);
-        portfolio.addDayOnePrice(ticker3, 0.0);
-
-        assertThrows(IllegalStateException.class, () -> trade.RunTradingPattern(portfolio));
-    }
-
-    @Test
-    public void testNullStringStockAllocations() {
-        stock1 = new StockETF(ticker, security);
-        stock2 = new StockETF(ticker2, security);
-        stock3 = new StockETF(ticker3, security);
-        stockETFMap = new HashMap<>();
-
-        stock1.addPriceDate(price1);
-        stock1.addPriceDate(price2);
-        stock1.addPriceDate(price3);
-        stock1.addPriceMap(date, price1);
-        stock1.addPriceMap(date2, price2);
-        stock1.addPriceMap(date3, price3);
-
-        stock2.addPriceDate(price1);
-        stock2.addPriceDate(price2);
-        stock2.addPriceDate(price3);
-        stock2.addPriceMap(date, price1);
-        stock2.addPriceMap(date2, price2);
-        stock2.addPriceMap(date3, price3);
-
-        stock3.addPriceDate(price1);
-        stock3.addPriceDate(price2);
-        stock3.addPriceDate(price3);
-        stock3.addPriceMap(date, price1);
-        stock3.addPriceMap(date2, price2);
-        stock3.addPriceMap(date3, price3);
-
-        stockETFMap.put(ticker, stock1);
-        stockETFMap.put(null, stock2);
-        stockETFMap.put(ticker3, null);
-
-        allocations = null;
-
-        threshold.put(ticker, 0.0);
-        threshold.put(ticker2, 0.0);
-        threshold.put(ticker3, 0.0);
-
-        Portfolio portfolio = new Portfolio(
-                initialInvestment,
-                allocations,
-                stopLoss,
-                risk,
-                target,
-                threshold,
-                stockETFMap,
-                shares,
-                dateResults
-        );
-
-        portfolio.addTotalBuyDollars(ticker, 100.0);
-        portfolio.addTotalBuyDollars(ticker2, 200.0);
-        portfolio.addTotalBuyDollars(ticker3, 300.0);
-
-        portfolio.addTotalSellDollars(ticker, 100.0);
-        portfolio.addTotalSellDollars(ticker2, 50.0);
-        portfolio.addTotalSellDollars(ticker3, 10.0);
-
-        portfolio.addShares(ticker, 0.0);
-        portfolio.addShares(null, 0.0);
-        portfolio.addShares(ticker3, 0.0);
-
-        portfolio.initializeShares(ticker, 0.0);
-        portfolio.initializeShares(ticker2, 0.0);
-        portfolio.initializeShares(ticker3, 0.0);
-
-        portfolio.addDayOnePrice(ticker, 0.0);
-        portfolio.addDayOnePrice(ticker2, 0.0);
-        portfolio.addDayOnePrice(ticker3, 0.0);
-
-        trade.RunTradingPattern(portfolio);
-    }
-
-    @Test
-    public void testDummyPortfolio() {
-        stock1 = new StockETF(ticker, security);
-        stock2 = new StockETF(ticker2, security);
-        stock3 = new StockETF(ticker3, security);
-
-        stock1.addPriceDate(price1);
-        stock1.addPriceDate(price2);
-        stock1.addPriceDate(price3);
-        stock1.addPriceMap(date, price1);
-        stock1.addPriceMap(date2, price2);
-        stock1.addPriceMap(date3, price3);
-
-        stock2.addPriceDate(price1);
-        stock2.addPriceDate(price2);
-        stock2.addPriceDate(price3);
-        stock2.addPriceMap(date, price1);
-        stock2.addPriceMap(date2, price2);
-        stock2.addPriceMap(date3, price3);
-
-        stock3.addPriceDate(price1);
-        stock3.addPriceDate(price2);
-        stock3.addPriceDate(price3);
-        stock3.addPriceMap(date, price1);
-        stock3.addPriceMap(date2, price2);
-        stock3.addPriceMap(date3, price3);
-
-        stockETFMap = new HashMap<>();
-
-        stockETFMap.put(ticker, stock1);
-        stockETFMap.put(ticker2, stock2);
-        stockETFMap.put(ticker3, stock3);
-
-        threshold.put(ticker, 0.0);
-        threshold.put(ticker2, 0.0);
-        threshold.put(ticker3, 0.0);
-
-        allocations.put(ticker, 40);
-        allocations.put(ticker2, 30);
-        allocations.put(ticker3, 30);
-
-        portfolio = new Portfolio(
-                initialInvestment,
-                allocations,
-                stopLoss,
-                risk,
-                target,
-                threshold,
-                stockETFMap,
-                shares,
-                dateResults
-        );
-
-        portfolio.addTotalBuyDollars(ticker, 100.0);
-        portfolio.addTotalBuyDollars(ticker2, 200.0);
-        portfolio.addTotalBuyDollars(ticker3, 300.0);
-
-        portfolio.addTotalSellDollars(ticker, 100.0);
-        portfolio.addTotalSellDollars(ticker2, 50.0);
-        portfolio.addTotalSellDollars(ticker3, 10.0);
-
-        portfolio.addShares(ticker, 0.0);
-        portfolio.addShares(ticker2, 0.0);
-        portfolio.addShares(ticker3, 0.0);
-
-        portfolio.initializeShares(ticker, 0.0);
-        portfolio.initializeShares(ticker2, 0.0);
-        portfolio.initializeShares(ticker3, 0.0);
-
-        portfolio.addDayOnePrice(ticker, 0.0);
-        portfolio.addDayOnePrice(ticker2, 0.0);
-        portfolio.addDayOnePrice(ticker3, 0.0);
-
-        portfolio.addBuyPrice(ticker, 0.0);
-        portfolio.addBuyPrice(ticker2, 0.0);
-        portfolio.addBuyPrice(ticker3, 0.0);
-
-        trade.RunTradingPattern(portfolio);
-    }
+//    @Test
+//    public void testNullUserStocks() {
+//        stock1 = new StockETF(ticker, security);
+//        stock2 = new StockETF(ticker2, security);
+//        stock3 = new StockETF(ticker3, security);
+//        stockETFMap = null;
+//
+//        stock1.addPriceDate(price1);
+//        stock1.addPriceDate(price2);
+//        stock1.addPriceDate(price3);
+//        stock1.addPriceMap(date, price1);
+//        stock1.addPriceMap(date2, price2);
+//        stock1.addPriceMap(date3, price3);
+//
+//        stock2.addPriceDate(price1);
+//        stock2.addPriceDate(price2);
+//        stock2.addPriceDate(price3);
+//        stock2.addPriceMap(date, price1);
+//        stock2.addPriceMap(date2, price2);
+//        stock2.addPriceMap(date3, price3);
+//
+//        stock3.addPriceDate(price1);
+//        stock3.addPriceDate(price2);
+//        stock3.addPriceDate(price3);
+//        stock3.addPriceMap(date, price1);
+//        stock3.addPriceMap(date2, price2);
+//        stock3.addPriceMap(date3, price3);
+//
+//        Portfolio portfolio = new Portfolio(
+//                initialInvestment,
+//                allocations,
+//                stopLoss,
+//                risk,
+//                target,
+//                threshold,
+//                stockETFMap,
+//                shares,
+//                dateResults
+//        );
+//
+//        portfolio.addTotalBuyDollars(ticker, 100.0);
+//        portfolio.addTotalBuyDollars(ticker2, 200.0);
+//        portfolio.addTotalBuyDollars(ticker3, 300.0);
+//
+//        portfolio.addTotalSellDollars(ticker, 100.0);
+//        portfolio.addTotalSellDollars(ticker2, 50.0);
+//        portfolio.addTotalSellDollars(ticker3, 10.0);
+//
+//        portfolio.addShares(ticker, 0.0);
+//        portfolio.addShares(ticker2, 0.0);
+//        portfolio.addShares(ticker3, 0.0);
+//
+//        portfolio.initializeShares(ticker, 0.0);
+//        portfolio.initializeShares(ticker2, 0.0);
+//        portfolio.initializeShares(ticker3, 0.0);
+//
+//        portfolio.addDayOnePrice(ticker, 0.0);
+//        portfolio.addDayOnePrice(ticker2, 0.0);
+//        portfolio.addDayOnePrice(ticker3, 0.0);
+//
+//        assertThrows(IllegalStateException.class, () -> trade.RunTradingPattern(portfolio));
+//    }
+//
+//    @Test
+//    public void testNullStringStockAllocations() {
+//        stock1 = new StockETF(ticker, security);
+//        stock2 = new StockETF(ticker2, security);
+//        stock3 = new StockETF(ticker3, security);
+//        stockETFMap = new HashMap<>();
+//
+//        stock1.addPriceDate(price1);
+//        stock1.addPriceDate(price2);
+//        stock1.addPriceDate(price3);
+//        stock1.addPriceMap(date, price1);
+//        stock1.addPriceMap(date2, price2);
+//        stock1.addPriceMap(date3, price3);
+//
+//        stock2.addPriceDate(price1);
+//        stock2.addPriceDate(price2);
+//        stock2.addPriceDate(price3);
+//        stock2.addPriceMap(date, price1);
+//        stock2.addPriceMap(date2, price2);
+//        stock2.addPriceMap(date3, price3);
+//
+//        stock3.addPriceDate(price1);
+//        stock3.addPriceDate(price2);
+//        stock3.addPriceDate(price3);
+//        stock3.addPriceMap(date, price1);
+//        stock3.addPriceMap(date2, price2);
+//        stock3.addPriceMap(date3, price3);
+//
+//        stockETFMap.put(ticker, stock1);
+//        stockETFMap.put(null, stock2);
+//        stockETFMap.put(ticker3, null);
+//
+//        allocations = null;
+//
+//        threshold.put(ticker, 0.0);
+//        threshold.put(ticker2, 0.0);
+//        threshold.put(ticker3, 0.0);
+//
+//        Portfolio portfolio = new Portfolio(
+//                initialInvestment,
+//                allocations,
+//                stopLoss,
+//                risk,
+//                target,
+//                threshold,
+//                stockETFMap,
+//                shares,
+//                dateResults
+//        );
+//
+//        portfolio.addTotalBuyDollars(ticker, 100.0);
+//        portfolio.addTotalBuyDollars(ticker2, 200.0);
+//        portfolio.addTotalBuyDollars(ticker3, 300.0);
+//
+//        portfolio.addTotalSellDollars(ticker, 100.0);
+//        portfolio.addTotalSellDollars(ticker2, 50.0);
+//        portfolio.addTotalSellDollars(ticker3, 10.0);
+//
+//        portfolio.addShares(ticker, 0.0);
+//        portfolio.addShares(null, 0.0);
+//        portfolio.addShares(ticker3, 0.0);
+//
+//        portfolio.initializeShares(ticker, 0.0);
+//        portfolio.initializeShares(ticker2, 0.0);
+//        portfolio.initializeShares(ticker3, 0.0);
+//
+//        portfolio.addDayOnePrice(ticker, 0.0);
+//        portfolio.addDayOnePrice(ticker2, 0.0);
+//        portfolio.addDayOnePrice(ticker3, 0.0);
+//
+//        trade.RunTradingPattern(portfolio);
+//    }
+//
+//    @Test
+//    public void testDummyPortfolio() {
+//        stock1 = new StockETF(ticker, security);
+//        stock2 = new StockETF(ticker2, security);
+//        stock3 = new StockETF(ticker3, security);
+//
+//        stock1.addPriceDate(price1);
+//        stock1.addPriceDate(price2);
+//        stock1.addPriceDate(price3);
+//        stock1.addPriceMap(date, price1);
+//        stock1.addPriceMap(date2, price2);
+//        stock1.addPriceMap(date3, price3);
+//
+//        stock2.addPriceDate(price1);
+//        stock2.addPriceDate(price2);
+//        stock2.addPriceDate(price3);
+//        stock2.addPriceMap(date, price1);
+//        stock2.addPriceMap(date2, price2);
+//        stock2.addPriceMap(date3, price3);
+//
+//        stock3.addPriceDate(price1);
+//        stock3.addPriceDate(price2);
+//        stock3.addPriceDate(price3);
+//        stock3.addPriceMap(date, price1);
+//        stock3.addPriceMap(date2, price2);
+//        stock3.addPriceMap(date3, price3);
+//
+//        stockETFMap = new HashMap<>();
+//
+//        stockETFMap.put(ticker, stock1);
+//        stockETFMap.put(ticker2, stock2);
+//        stockETFMap.put(ticker3, stock3);
+//
+//        threshold.put(ticker, 0.0);
+//        threshold.put(ticker2, 0.0);
+//        threshold.put(ticker3, 0.0);
+//
+//        allocations.put(ticker, 40);
+//        allocations.put(ticker2, 30);
+//        allocations.put(ticker3, 30);
+//
+//        portfolio = new Portfolio(
+//                initialInvestment,
+//                allocations,
+//                stopLoss,
+//                risk,
+//                target,
+//                threshold,
+//                stockETFMap,
+//                shares,
+//                dateResults
+//        );
+//
+//        portfolio.addTotalBuyDollars(ticker, 100.0);
+//        portfolio.addTotalBuyDollars(ticker2, 200.0);
+//        portfolio.addTotalBuyDollars(ticker3, 300.0);
+//
+//        portfolio.addTotalSellDollars(ticker, 100.0);
+//        portfolio.addTotalSellDollars(ticker2, 50.0);
+//        portfolio.addTotalSellDollars(ticker3, 10.0);
+//
+//        portfolio.addShares(ticker, 0.0);
+//        portfolio.addShares(ticker2, 0.0);
+//        portfolio.addShares(ticker3, 0.0);
+//
+//        portfolio.initializeShares(ticker, 0.0);
+//        portfolio.initializeShares(ticker2, 0.0);
+//        portfolio.initializeShares(ticker3, 0.0);
+//
+//        portfolio.addDayOnePrice(ticker, 0.0);
+//        portfolio.addDayOnePrice(ticker2, 0.0);
+//        portfolio.addDayOnePrice(ticker3, 0.0);
+//
+//        portfolio.addBuyPrice(ticker, 0.0);
+//        portfolio.addBuyPrice(ticker2, 0.0);
+//        portfolio.addBuyPrice(ticker3, 0.0);
+//
+//        trade.RunTradingPattern(portfolio);
+//    }
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 import project.ui.SimulatorUI;
 
 public class TotalValueOnDate {
-    private static Map<MyDate, String> results = new HashMap<>();
+    private Map<MyDate, String> results = new HashMap<>();
 
     public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
         if (results == null || date == null || map == null)

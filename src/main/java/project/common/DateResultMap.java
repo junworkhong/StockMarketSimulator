@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class DateResultMap {
-    public Map<MyDate, DateResults> map = new TreeMap<>();
+    public static Map<MyDate, DateResults> map = new TreeMap<>();
 
     public class DateResults {
         private double initialInvestment;
@@ -39,7 +39,7 @@ public class DateResultMap {
         }
     }
 
-    public void addDateResults(MyDate todayDate,
+    public static void addDateResults(MyDate todayDate,
                                                     double initInvestment,
                                                     double currCash,
                                                     double currSharesValue,
