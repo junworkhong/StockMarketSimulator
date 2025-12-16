@@ -34,6 +34,9 @@ public class CompareWithSP500 {
         PriceDate spStart = sp500.getPriceMap().get(startDate);
         PriceDate spEnd = sp500.getPriceMap().get(endDate);
 
+//        System.out.println(sp500.getPriceMap().keySet().iterator().next());
+//        System.out.println(startDate);
+
         if (spStart == null || spEnd == null) {
             throw new IllegalStateException("Missing S&P 500 data for the given dates");
         }

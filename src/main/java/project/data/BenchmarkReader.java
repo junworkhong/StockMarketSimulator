@@ -37,8 +37,8 @@ public class BenchmarkReader {
                     if (split.length != 6)
                         continue;
 
-                    MyDate date = new MyDate(split[0]);
-                    String regex = "[.0\\s]";
+                    MyDate date = new MyDate(split[0].replace("\uFEFF", "").trim());
+//                    String regex = "[.0\\s]";
 
                     if (split[1] == null || split[1].isEmpty()
                             || split[2] == null || split[2].isEmpty()
@@ -47,7 +47,7 @@ public class BenchmarkReader {
                             || split[5] == null || split[5].isEmpty())
                         continue;
 
-                    split[5] = split[5].replaceAll(regex, "");
+                    split[5] = split[5].replaceAll("\\.0$", "");
 
                     PriceDate priceDate = new PriceDate(
                             Double.parseDouble(split[4]),

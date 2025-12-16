@@ -8,54 +8,60 @@ import java.util.Objects;
 public class MyDate implements Comparable<MyDate> {
     private final String date;
     public MyDate (String date) {
-        this.date = date;
+        this.date = date.trim();
     }
 
     @Override
-    public int compareTo(MyDate d2) {
-        //Returns 1 if d1 is later than d2, i.e. January 2024 vs March 2021
-        if (d2 == null || d2.date == null)
-            return -1;
-
-        if (this.date.equals(d2.date)) {
-            return 0;
-        }
-
-        String[] split1 = this.date.split("-");
-        String[] split2 = d2.date.split("-");
-
-        if (split1.length != 3 || split2.length != 3)
-            throw new IllegalArgumentException("Invalid date format");
-
-        int year1 = 0;
-        int year2 = 0;
-        int month1 = 0;
-        int month2 = 0;
-        int day1 = 0;
-        int day2 = 0;
-
-        try {
-            year1 = Integer.parseInt(split1[0]);
-            year2 = Integer.parseInt(split2[0]);
-
-            month1 = Integer.parseInt(split1[1]);
-            month2 = Integer.parseInt(split2[1]);
-
-            day1 = Integer.parseInt(split1[2]);
-            day2 = Integer.parseInt(split2[2]);
-        }catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid date format");
-        }
-
-        if (year1 > year2)
-            return 1;
-        else if (year1 == year2 && month1 > month2)
-            return 1;
-        else if (year1 == year2 && month1 == month2 && day1 > day2)
-            return 1;
-        else
-            return -1;
+    public int compareTo(MyDate other) {
+        if (other == null) return 1;
+        return this.date.compareTo(other.date);
     }
+
+//    @Override
+//    public int compareTo(MyDate d2) {
+//        //Returns 1 if d1 is later than d2, i.e. January 2024 vs March 2021
+//        if (d2 == null || d2.date == null)
+//            return -1;
+//
+//        if (this.date.equals(d2.date)) {
+//            return 0;
+//        }
+//
+//        String[] split1 = this.date.split("-");
+//        String[] split2 = d2.date.split("-");
+//
+//        if (split1.length != 3 || split2.length != 3)
+//            throw new IllegalArgumentException("Invalid date format");
+//
+//        int year1 = 0;
+//        int year2 = 0;
+//        int month1 = 0;
+//        int month2 = 0;
+//        int day1 = 0;
+//        int day2 = 0;
+//
+//        try {
+//            year1 = Integer.parseInt(split1[0]);
+//            year2 = Integer.parseInt(split2[0]);
+//
+//            month1 = Integer.parseInt(split1[1]);
+//            month2 = Integer.parseInt(split2[1]);
+//
+//            day1 = Integer.parseInt(split1[2]);
+//            day2 = Integer.parseInt(split2[2]);
+//        }catch (NumberFormatException e) {
+//            throw new IllegalArgumentException("Invalid date format");
+//        }
+//
+//        if (year1 > year2)
+//            return 1;
+//        else if (year1 == year2 && month1 > month2)
+//            return 1;
+//        else if (year1 == year2 && month1 == month2 && day1 > day2)
+//            return 1;
+//        else
+//            return -1;
+//    }
 
     public boolean isValidDate (MyDate date) {
         SimulatorUI sim =  new SimulatorUI();

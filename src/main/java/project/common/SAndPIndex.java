@@ -1,9 +1,6 @@
 package project.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SAndPIndex extends Investment{
     private final List<PriceDate> prices;
@@ -12,7 +9,7 @@ public class SAndPIndex extends Investment{
     public SAndPIndex(String name) {
         super(name);
         this.prices = new ArrayList<>();
-        this.priceMap = new HashMap<>();
+        this.priceMap = new TreeMap<>();
     }
 
     @Override

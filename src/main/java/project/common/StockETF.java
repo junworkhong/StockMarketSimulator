@@ -1,10 +1,7 @@
 package project.common;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StockETF extends Investment{
     private final Security securityType;
@@ -15,7 +12,7 @@ public class StockETF extends Investment{
         super(tickerName);
         this.securityType = securityType;
         this.prices = new ArrayList<>();
-        this.priceMap = new HashMap<>();
+        this.priceMap = new TreeMap<>();
     }
 
     @Override
