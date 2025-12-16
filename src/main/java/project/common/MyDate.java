@@ -24,7 +24,7 @@ public class MyDate implements Comparable<MyDate> {
         String[] split1 = this.date.split("-");
         String[] split2 = d2.date.split("-");
 
-        if (split1.length != 2 || split2.length != 2)
+        if (split1.length != 3 || split2.length != 3)
             throw new IllegalArgumentException("Invalid date format");
 
         int year1 = 0;

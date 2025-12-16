@@ -169,7 +169,7 @@ public class ExampleTradingPattern {
             }
             double currTotal = currCash + currSharesValue;
             double currReturnPercent = (currTotal / dummy.getInitialInvestment() * 100.0);
-            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, dummy.getShares());
+//            DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, dummy.getShares());
         }
 
         MyDate lastDate = dates.getDateList().get(dates.getDateList().size() - 1);
