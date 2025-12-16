@@ -6,7 +6,7 @@ import java.util.TreeMap;
 public class DateResultMap {
     public static Map<MyDate, DateResults> map = new TreeMap<>();
 
-    public class DateResults {
+    public static class DateResults {
         private double initialInvestment;
         private double currentCash;
         private double currentSharesValue;
@@ -55,8 +55,12 @@ public class DateResultMap {
         map.put(todayDate, myResults);
     }
 
-    public Map<MyDate, DateResults> getDateResults() {
+    public static Map<MyDate, DateResults> getDateResults() {
         return map;
+    }
+
+    public static void clearDateResult() {
+        map.clear();
     }
 
     public void dateResultOutput() {

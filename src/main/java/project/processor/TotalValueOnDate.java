@@ -12,8 +12,10 @@ public class TotalValueOnDate {
     private Map<MyDate, String> results = new HashMap<>();
 
     public String calculateTotalValueOnDate(MyDate date, Map<MyDate, DateResultMap.DateResults> map){
-        if (results == null || date == null || map == null)
+        if (date == null || map == null)
             throw new IllegalStateException("Results or dates are invalid");
+
+        results.clear();
 
         try {
             if (!date.isValidDate(date))

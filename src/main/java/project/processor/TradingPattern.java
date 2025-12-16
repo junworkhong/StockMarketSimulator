@@ -10,8 +10,6 @@ public class TradingPattern implements TradingStrategy{
     private static final Map<String, StockETF> stockETFs = reader.readStockETFs();
     private static final DateCounter dates = new DateCounter();
 
-    private DateResultMap dateResultMap = new DateResultMap();
-
     public void RunTradingPattern(Portfolio portfolio){
         if (portfolio == null)
             throw new IllegalStateException("Invalid portfolio");
@@ -128,7 +126,7 @@ public class TradingPattern implements TradingStrategy{
                 }
                 double currTotal = currCash + currSharesValue;
                 double currReturnPercent = (currTotal / portfolio.getInitialInvestment() * 100.0);
-                dateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, portfolio.getShares());
+                DateResultMap.addDateResults(date, initial, currCash, currSharesValue, currTotal, currReturnPercent, portfolio.getShares());
             }
         }
 
