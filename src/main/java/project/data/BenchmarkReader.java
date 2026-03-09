@@ -20,7 +20,8 @@ public class BenchmarkReader {
         Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
         String filename = "sap500indexbenchmark.csv";
         String filepath = path.toString();
-        File directory = new File(filepath + "\\" + filename);
+        // File directory = new File(filepath + "\\" + filename);
+        File directory = new File(filepath + File.separator + filename);
 
         String name = "S&P 500 Index Benchmark";
         SAndPIndex benchmark = new SAndPIndex(name);
