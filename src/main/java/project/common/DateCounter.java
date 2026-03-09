@@ -15,7 +15,8 @@ public class DateCounter {
 
     public DateCounter() {
         Path path = Paths.get(System.getProperty("user.dir"), "CSVs");
-        File directory = new File(path.toString() + "//AAPL Stock (Apple).csv");
+        // File directory = new File(path.toString() + "//AAPL Stock (Apple).csv");
+        File directory = new File(path.toString() + File.separator + "AAPL Stock.csv");
 
         try {
             if (directory.isFile()) {
